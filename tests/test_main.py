@@ -35,7 +35,7 @@ def test_calculate_heating():
     """
     test_input = SpaceHeatingModel(area=100, insulation_level="medium", average_temperature=22, heating_type="electric")
     result = calculate_heating(test_input)
-    assert result == {"cost": test_input.area * 5}  # Assuming your dummy logic of cost calculation is area * 5
+    assert result == {"cost": test_input.area * 5
 
 
 def test_calculate_water_heating():
@@ -44,7 +44,5 @@ def test_calculate_water_heating():
     """
     test_input = WaterHeatingModel(volume_litres=100, temp_increase_celsius=5, efficiency=0.8)
     result = calculate_water_heating(test_input)
-    # Assuming your dummy logic for energy calculation:
-    # energy (kWh) = volume_liters * temp_increase_celsius * 0.001163 / efficiency
     expected_energy = test_input.volume_litres * test_input.temp_increase_celsius * 0.001163 / test_input.efficiency
     assert result["energy_required"] == expected_energy

@@ -1,6 +1,6 @@
 # Electrify App
 
-This repository contains the source code for the Electrify App, a FastAPI application designed to provide insights into household energy costs. It's designed to be easy to deploy both locally and as a Docker container.
+This repository contains the source code for the Electrify App, a FastAPI application designed to provide insights into household energy costs. It's a prototype for an approach to deploying our models that is intended to make it easy to deploy them both locally and as a dockerized backend for our public tools.
 
 ## Prerequisites
 Before running the application, ensure you have Python and Docker installed on your system. Python 3.12 or higher is recommended.
@@ -66,3 +66,73 @@ Before running the application, ensure you have Python and Docker installed on y
 
 * The Docker setup runs the application on port 8000, make sure this port is available on your machine.
 * The API uses FastAPI, which provides automatic interactive API documentation (Swagger UI), making it easier to visualize and interact with the API's endpoints.
+
+
+## Deploying the EV Roam Container
+
+This section provides step-by-step instructions for building, pushing, and deploying the `electrify-app` Docker container to Azure.
+
+### Azure Login
+
+Login to Azure:
+
+```
+az login --scope https://management.core.windows.net//.default
+```
+
+### Set Environment Variables
+
+Define necessary environment variables:
+
+```powershell
+$resourceGroup = "eeca-rg-DWBI-dev-aue"
+$acrName = "eecaacrdwbidevaue"
+$location = "australiaeast"
+$containerGroupName = "aci-evroam"
+$acrPassword = az acr credential show -n $acrName --query "passwords[0].value" -o tsv
+$loginServer = az acr show -n $acrName --query loginServer --output tsv
+$image = "electrify-app:0.1.0"
+$imageTag = "$loginServer/$image"
+```
+
+### Docker Operations
+
+Login to Docker, build the Docker image, tag it, and push it to Azure Container Registry:
+
+```
+docker login -u $acrName -p $acrPassword $loginServer
+docker build -t $image .
+docker tag $image $imageTag
+docker push $imageTag
+```
+
+### Azure Container Instance Deployment
+
+Create the Azure Container Instance:
+
+```powershell
+az container create -g $resourceGroup -n $containerGroupName --registry-username $acrName --registry-password $acrPassword --image $imageTag --cpu 1 --memory 1 --dns-name-label "aciacr" --ports 8000 --restart-policy Always
+```
+
+Verify the container and view its logs:
+
+```
+az container show -g $resourceGroup -n $containerGroupName
+az container logs -g $resourceGroup -n $containerGroupName
+```
+
+### Accessing the Application
+
+Point your browser at:
+
+```
+http://aciacr.australiaeast.azurecontainer.io:8000/
+```
+
+### Cleanup
+
+Delete the container when done:
+
+```
+az container delete -g $resourceGroup -n $containerGroupName
+```
