@@ -143,6 +143,18 @@ Point your browser at:
 http://aciacr.australiaeast.azurecontainer.io:8000/
 ```
 
+### Post a request to the API:
+```bash
+curl -Method 'POST' `
+    -Uri 'http://aciacr.australiaeast.azurecontainer.io:8000/water-heating/' `
+    -Headers @{ "Accept"="application/json"; "Content-Type"="application/json" } `
+    -Body '{
+    "volume_litres": 100,
+    "temp_increase_celsius": 50,
+    "efficiency": 0.8
+    }'
+```
+
 ### Cleanup
 
 Delete the container when done:
