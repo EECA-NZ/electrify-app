@@ -1,6 +1,5 @@
 # Electrify App
 
-## Introduction
 This repository contains the source code for the Electrify App, a FastAPI application designed to provide insights into household energy costs. It's designed to be easy to deploy both locally and as a Docker container.
 
 ## Prerequisites
