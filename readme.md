@@ -16,7 +16,7 @@ Before running the application, ensure you have Python and Docker installed on y
 1. **Upgrade pip and install dependencies:**
     ```bash
     python -m pip install --upgrade pip
-    python -m pip install -r requirements.txt
+    python -m pip install .
     ```
 
 1. **Run the test suite:**
@@ -33,6 +33,17 @@ Before running the application, ensure you have Python and Docker installed on y
 1. **Access the application:**
     Point your browser at `http://localhost:8000` or `http://localhost:8000/docs` to see the Swagger UI.
 
+1. **Post a request to the API:**
+    ```bash
+    curl -Method 'POST' `
+     -Uri 'http://localhost:8000/water-heating/' `
+     -Headers @{ "Accept"="application/json"; "Content-Type"="application/json" } `
+     -Body '{
+        "volume_litres": 100,
+        "temp_increase_celsius": 50,
+        "efficiency": 0.8
+     }'
+    ```
 
 ## Docker Setup
 
@@ -46,13 +57,11 @@ Before running the application, ensure you have Python and Docker installed on y
     docker run --rm -p 8000:8000 electrify-app
     ```
 
-
 ## Accessing the application
 
 * **Local web URL:** Point your browser at `http://localhost:8000` to view the application.
 
 * **Swagger UI:** Access the Swagger UI by navigating to `http://localhost:8000/docs` where you can see and interact with the API's resources.
-
 
 ## Additional notes
 

@@ -3,13 +3,15 @@ from app.main import app  # Adjust this import according to your project structu
 
 client = TestClient(app)
 
+
 def test_read_root():
     """
     Test the root endpoint to ensure it returns the correct response.
     """
     response = client.get("/")
     assert response.status_code == 200
-    assert response.json() == {"Hello": "World"}
+    assert "<html>" in response.text
+
 
 def test_startup_event(capsys):
     """
