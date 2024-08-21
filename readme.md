@@ -1,6 +1,6 @@
 # Electrify App
 
-This repository contains the source code for the Electrify App, a FastAPI application designed to provide insights into household energy costs. It's a prototype for an approach to deploying our models that is intended to make it easy to deploy them both locally and as a dockerized backend for our public tools.
+This repository contains the source code for the Electrify App, a FastAPI application designed to provide insights into household energy costs. It's designed to be easy to deploy as a Docker container and also easy to use locally as a library.
 
 ## Prerequisites
 Before running the application, ensure you have Python and Docker installed on your system. Python 3.12 or higher is recommended.
@@ -21,6 +21,12 @@ Before running the application, ensure you have Python and Docker installed on y
 1. **Run the test suite:**
     ```bash
     python -m pytest
+    ```
+
+1. **Run a script using the library:**
+    ```bash
+    cd scripts
+    python run_heating_analysis.py
     ```
 
 1. **Run the application locally:**
