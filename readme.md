@@ -24,8 +24,8 @@ Before running the application, ensure you have Python and Docker installed on y
     ```
 
 1. **Run the application locally:**
-    ```bash
     Use Uvicorn to run the application with live reloading to restart the server after code changes:
+    ```bash
     python -m uvicorn app.main:app --reload
     ```
 
