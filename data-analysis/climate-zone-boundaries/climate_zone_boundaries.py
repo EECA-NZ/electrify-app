@@ -183,6 +183,13 @@ def main():
     merged_gdf.to_file(OUTPUT_SHAPEFILE_PATH)
     print(f"Saved merged climate zone boundaries to {OUTPUT_SHAPEFILE_PATH}")
 
+    # Save as a GeoJSON file for visualization in GitHub
+    merged_gdf.to_file(OUTPUT_SHAPEFILE_PATH.replace('.shp', '.geojson'), driver='GeoJSON')
+    print(f"Saved merged climate zone boundaries to {OUTPUT_SHAPEFILE_PATH.replace('.shp', '.geojson')}")
+
+    # Save as a geopackage for use in the DNA library
+    merged_gdf.to_file(OUTPUT_SHAPEFILE_PATH.replace('.shp', '.gpkg'), driver='GPKG')
+    print(f"Saved merged climate zone boundaries to {OUTPUT_SHAPEFILE_PATH.replace('.shp', '.gpkg')}")
     return merged_gdf
 
 
