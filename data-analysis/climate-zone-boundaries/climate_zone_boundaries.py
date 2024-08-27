@@ -1,18 +1,17 @@
 import os
-import shutil
 import fiona
 import pyproj
+import shutil
 import pandas as pd
 from pyproj import CRS
 import geopandas as gpd
 import matplotlib.pyplot as plt
-from shapely.ops import transform
+from shapely.ops import split, transform
 from shapely.geometry import shape, LineString
 from shapely.geometry import Polygon, MultiPolygon
-from shapely.ops import split
 
-from ta_to_climate_zone import ta_to_climate_zone
 from process_river import load_and_process_river
+from ta_to_climate_zone import ta_to_climate_zone
 
 
 #### Constants
@@ -21,9 +20,10 @@ RANGITIKEI_SPLIT_LINE = LineString([(lon, -39.833333333) for lon in (175.41445, 
 OTEKAIEKE_END_POINTS = [(170.333, -44.904), (170.5846, -44.815)] # Force the river to cross the TA boundary
 OTEKAIEKE = load_and_process_river('Otekaieke River', OTEKAIEKE_END_POINTS)  # Get the river geometry, removing braiding and extending to just past the TA boundary
 DIRECTORY_PATH = "./statsnz-territorial-authority-2023-clipped-generalised-SHP"
-SHAPEFILE_NAME = "territorial-authority-2023-clipped-generalised.shp"
-SHAPEFILE_PATH = f"{DIRECTORY_PATH}/{SHAPEFILE_NAME}"
+INPUT_SHAPEFILE_NAME = "territorial-authority-2023-clipped-generalised.shp"
+INPUT_SHAPEFILE_PATH = f"{DIRECTORY_PATH}/{INPUT_SHAPEFILE_NAME}"
 OUTPUT_PATH = "./output"
+OUTPUT_SHAPEFILE_PATH = f"{OUTPUT_PATH}/eeca_niwa_climate_boundaries/eeca_niwa_climate_boundaries.shp"
 
 
 #### Functions
@@ -33,7 +33,7 @@ def transform_geometry(geometry, transformer):
     return transform(transformer.transform, geometry)
 
 
-def adjust_longitude(x, y, z=None):
+def adjust_longitude(x, y):
     """Adjust longitudes to be within [0, 360]."""
     if x < 0:
         x += 360
@@ -64,18 +64,14 @@ def load_and_transform_shapefile(shapefile_path):
 
 
 def split_geometry_by_line(geom, line, crs):
+    """Split the given geometry by the given line and return all parts."""
     split_result = split(geom, line)
     polygons = [geom for geom in split_result.geoms if isinstance(geom, (Polygon, MultiPolygon))]
     split_gdf = gpd.GeoDataFrame(geometry=polygons, crs=crs)
     split_gdf = split_gdf.to_crs("EPSG:2193")  # Convert to NZTM for area calculation
     split_gdf['area'] = split_gdf['geometry'].area
     split_gdf = split_gdf.to_crs(crs)  # Convert back for plotting
-    if len(split_gdf) > 2:
-        print(f"Warning: Splitting the geometry resulted in {len(split_gdf)} parts. Retaining the two largest.")
-    elif len(split_gdf) < 2:
-        print(f"Warning: Splitting the geometry resulted in {len(split_gdf)} parts.")
-    split_gdf = split_gdf.sort_values('area', ascending=False)
-    return split_gdf.head(2)
+    return split_gdf
 
 
 def plot_geometries(gdf, additional_features, title):
@@ -108,7 +104,6 @@ def plot_geometries(gdf, additional_features, title):
             for line in feature_geometry.geoms:
                 xs, ys = line.xy
                 ax.plot(xs, ys, color='blue', label=feature_name)
-    # Create custom legend
     ax.legend(legend_labels.values(), list(legend_labels.keys()) + list(additional_features.keys()))
     ax.set_title(title)
     ax.set_xlabel('Longitude')
@@ -124,9 +119,11 @@ def ensure_empty_directory(directory):
 
 
 def main():
+
     ensure_empty_directory(OUTPUT_PATH)
 
-    ta_gdf = load_and_transform_shapefile(SHAPEFILE_PATH)
+    # Load the TA shapefile and map the TA names to climate zones
+    ta_gdf = load_and_transform_shapefile(INPUT_SHAPEFILE_PATH)
     additional_features = {
         'Otekaieke River': OTEKAIEKE,
         'Rangitikei Split Line': RANGITIKEI_SPLIT_LINE
@@ -134,34 +131,42 @@ def main():
     plot_geometries(ta_gdf, additional_features, 'Territorial Authority Boundaries with Approximate Climate Zones')
     plt.savefig(f'{OUTPUT_PATH}/1-territorial-authority-boundaries.png')
 
-    # Split Waitaki District based on the Otekaieke River
-    waitaki = ta_gdf[ta_gdf['ta_name'] == 'Waitaki District']
-    waitaki_geom = waitaki['geometry'].iloc[0]
+    # Split Waitaki District based on the Otekaieke River.
+    ta_name = 'Waitaki District'
+    waitaki_geom = ta_gdf[ta_gdf['ta_name'] == ta_name]['geometry'].iloc[0]
     split_waitaki = split_geometry_by_line(waitaki_geom, OTEKAIEKE, ta_gdf.crs)
-    split_waitaki['centroid_lon'] = split_waitaki['geometry'].apply(lambda g: g.centroid.x)
-    split_waitaki = split_waitaki.sort_values('centroid_lon')
-    # Replace the original Waitaki District geometry with the sorted split geometries
-    ta_gdf = ta_gdf[ta_gdf['ta_name'] != 'Waitaki District']
-    new_entries = [
-        {'geometry': split_waitaki.iloc[0]['geometry'], 'climate': 'Central Otago', 'ta_name': 'Waitaki District (Inland)'},
-        {'geometry': split_waitaki.iloc[1]['geometry'], 'climate': 'Dunedin', 'ta_name': 'Waitaki District (Coastal)'}
-    ]
-    new_gdf = gpd.GeoDataFrame(new_entries, crs=ta_gdf.crs)
+    # Use lat to determine climate zone of each piece.
+    split_waitaki['centroid_lat'] = split_waitaki['geometry'].apply(lambda g: g.centroid.y)
+    threshold_lat = OTEKAIEKE.centroid.y
+    split_waitaki['climate'] = ['Dunedin' if lat < threshold_lat else 'Central Otago' for lat in split_waitaki['centroid_lat']]
+    split_waitaki['ta_name'] = ['Waitaki District (Coastal)' if lat < threshold_lat else 'Waitaki District (Inland)' for lat in split_waitaki['centroid_lat']]
+    new_gdf = gpd.GeoDataFrame(
+        [{'geometry': split_waitaki.iloc[i]['geometry'],
+        'climate': split_waitaki.iloc[i]['climate'],
+        'ta_name': split_waitaki.iloc[i]['ta_name']} for i in range(len(split_waitaki))],
+        crs=ta_gdf.crs
+    )
+    # Replace the original Waitaki District geometry with the split geometries
+    ta_gdf = ta_gdf[ta_gdf['ta_name'] != ta_name]
     ta_gdf = pd.concat([ta_gdf, new_gdf], ignore_index=True)
 
-    # Split the Rangitikei District based on the Rangitikei Split Line (latitude)
-    rangitikei = ta_gdf[ta_gdf['ta_name'] == 'Rangitikei District']
-    rangitikei_geom = rangitikei['geometry'].iloc[0]
+    # Split the Rangitikei District based on the Rangitikei Split Line (latitude).
+    ta_name = 'Rangitikei District'
+    rangitikei_geom = ta_gdf[ta_gdf['ta_name'] == ta_name]['geometry'].iloc[0]
     split_rangitikei = split_geometry_by_line(rangitikei_geom, RANGITIKEI_SPLIT_LINE, ta_gdf.crs)
+    # Use lat to determine climate zone of each piece.
     split_rangitikei['centroid_lat'] = split_rangitikei['geometry'].apply(lambda g: g.centroid.y)
-    split_rangitikei = split_rangitikei.sort_values('centroid_lat')
-    # Replace the original Rangitikei District geometry with the sorted split geometries
-    ta_gdf = ta_gdf[ta_gdf['ta_name'] != 'Rangitikei District']
-    new_entries = [
-        {'geometry': split_rangitikei.iloc[0]['geometry'], 'climate': 'Manawatu', 'ta_name': 'Rangitikei District (Coastal)'},
-        {'geometry': split_rangitikei.iloc[1]['geometry'], 'climate': 'Taupo', 'ta_name': 'Rangitikei District (Inland)'}
-    ]
-    new_gdf = gpd.GeoDataFrame(new_entries, crs=ta_gdf.crs)
+    threshold_lat = RANGITIKEI_SPLIT_LINE.centroid.y
+    split_rangitikei['climate'] = ['Manawatu' if lat < threshold_lat else 'Taupo' for lat in split_rangitikei['centroid_lat']]
+    split_rangitikei['ta_name'] = ['Rangitikei District (Coastal)' if lat < threshold_lat else 'Rangitikei District (Inland)' for lat in split_rangitikei['centroid_lat']]
+    new_gdf = gpd.GeoDataFrame(
+        [{'geometry': split_rangitikei.iloc[i]['geometry'],
+        'climate': split_rangitikei.iloc[i]['climate'],
+        'ta_name': split_rangitikei.iloc[i]['ta_name']} for i in range(len(split_rangitikei))],
+        crs=ta_gdf.crs
+    )
+    # Replace the original Rangitikei District geometry with the split geometries
+    ta_gdf = ta_gdf[ta_gdf['ta_name'] != ta_name]
     ta_gdf = pd.concat([ta_gdf, new_gdf], ignore_index=True)
     plot_geometries(ta_gdf, additional_features, 'Territorial Authority Boundaries with Corrected Climate Zones')
     plt.savefig(f'{OUTPUT_PATH}/2-territorial-authority-boundaries-climate-zones.png')
@@ -169,14 +174,14 @@ def main():
     # Merge contiguous territorial authorities with the same climate zone
     merged_gdf = ta_gdf.dissolve(by='climate', aggfunc='first')
     merged_gdf.reset_index(inplace=True)
+    additional_features = {}
     plot_geometries(merged_gdf, additional_features, 'EECA-reconstructed NIWA Climate Zones')
     plt.savefig(f'{OUTPUT_PATH}/3-eeca-niwa-climate-zones.png')
 
-    # Finally, save the merged geometries to a new shapefile
-    merged_shapefile_path = f"{OUTPUT_PATH}/eeca_niwa_climate_boundaries/eeca_niwa_climate_boundaries.shp"
-    ensure_empty_directory(f"{OUTPUT_PATH}/eeca_niwa_climate_boundaries/")
-    merged_gdf.to_file(merged_shapefile_path)
-    print(f"Saved merged climate zone boundaries to {merged_shapefile_path}")
+    # Save the merged geometries to the output shapefile
+    ensure_empty_directory(os.path.dirname(OUTPUT_SHAPEFILE_PATH))
+    merged_gdf.to_file(OUTPUT_SHAPEFILE_PATH)
+    print(f"Saved merged climate zone boundaries to {OUTPUT_SHAPEFILE_PATH}")
 
     return merged_gdf
 
