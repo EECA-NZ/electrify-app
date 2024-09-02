@@ -1,3 +1,9 @@
+# Directories containing data and outputs
+data-analysis/climate-zone-boundaries/lds-nz-river-name-lines-pilot-GPKG/
+data-analysis/climate-zone-boundaries/myenv/
+data-analysis/climate-zone-boundaries/output/
+data-analysis/climate-zone-boundaries/statsnz-territorial-authority-2023-clipped-generalised-SHP/
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
