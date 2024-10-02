@@ -1,6 +1,5 @@
-# Electrify App
-
-This repository contains the source code for the Electrify App, a FastAPI application designed to provide insights into household energy costs.
+# Home Efficiency Calculator
+This repository contains the source code for the home efficiency calculator, a FastAPI application designed to provide insights into household energy costs and CO2 emissions.
 
 This is a prototype for an approach to deploying our models that aims to make it easy:
 
@@ -14,10 +13,12 @@ In either case the same codebase is used, providing a single source of truth, an
 Before running the application, ensure you have Python and Docker installed on your system. Python 3.12 or higher is recommended.
 
 ## Local Setup
+It is assumed that the user is working in a powershell environment on a windows machine.
+
 1. **Create and activate a virtual environment:**
    ```bash
-   python -m venv venv
-   .\venv\Scripts\activate
+   python -m venv .venv
+   .\.venv\Scripts\activate
     ```
 
 1. **Upgrade pip and install dependencies:**
@@ -62,12 +63,12 @@ Before running the application, ensure you have Python and Docker installed on y
 
 1. **Build the Docker image:**
     ```bash
-    docker build -t electrify-app .
+    docker build -t home-efficiency-calculator .
     ```
 
 1. **Run the Docker container:**
     ```bash
-    docker run --rm -p 8000:8000 electrify-app
+    docker run --rm -p 8000:8000 home-efficiency-calculator
     ```
 
 ## Accessing the application
@@ -79,12 +80,11 @@ Before running the application, ensure you have Python and Docker installed on y
 ## Additional notes
 
 * The Docker setup runs the application on port 8000, make sure this port is available on your machine.
-* The API uses FastAPI, which provides automatic interactive API documentation (Swagger UI), making it easier to visualize and interact with the API's endpoints.
-
+* The API uses FastAPI, which provides automatic interactive API documentation (Swagger UI).
 
 ## Deploying the EV Roam Container
 
-This section provides step-by-step instructions for building, pushing, and deploying the `electrify-app` Docker container to Azure.
+This section provides step-by-step instructions for building, pushing, and deploying the `home-efficiency-calculator` Docker container to Azure.
 
 ### Azure Login
 
@@ -102,10 +102,10 @@ Define necessary environment variables:
 $resourceGroup = "eeca-rg-DWBI-dev-aue"
 $acrName = "eecaacrdwbidevaue"
 $location = "australiaeast"
-$containerGroupName = "aci-evroam"
+$containerGroupName = "aci-home-efficiency-calculator"
 $acrPassword = az acr credential show -n $acrName --query "passwords[0].value" -o tsv
 $loginServer = az acr show -n $acrName --query loginServer --output tsv
-$image = "electrify-app:0.1.0"
+$image = "home-efficiency-calculator:0.1.0"
 $imageTag = "$loginServer/$image"
 ```
 
