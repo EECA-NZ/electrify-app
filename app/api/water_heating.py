@@ -1,5 +1,5 @@
 from fastapi import APIRouter, HTTPException
-from ..models import WaterHeatingModel
+from ..models.water_heating import WaterHeatingModel
 
 router = APIRouter()
 

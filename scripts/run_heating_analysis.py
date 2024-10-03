@@ -1,5 +1,5 @@
 from app.calculations import calculate_heating
-from app.models import SpaceHeatingModel
+from app.models.space_heating import SpaceHeatingModel
 
 def run_heating_analysis():
     properties = [

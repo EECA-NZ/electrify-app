@@ -3,9 +3,9 @@ requires = ["setuptools>=61.0.0", "wheel"]  # Ensure setuptools is at a sufficie
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "electrify_app"
+name = "home_efficiency_calculator"
 version = "0.1.0"
-description = "A web API for household energy cost estimates"
+description = "A web API for household energy cost and CO2 emissions estimates"
 authors = [{ name = "EECA", email = "DataAndAnalytics@eeca.govt.nz" }]
 dependencies = [
     "fastapi",

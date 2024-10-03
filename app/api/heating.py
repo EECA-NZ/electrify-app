@@ -1,5 +1,5 @@
 from fastapi import APIRouter, Body
-from ..models import SpaceHeatingModel
+from ..models.space_heating import SpaceHeatingModel
 from ..calculations import calculate_heating
 
 router = APIRouter()

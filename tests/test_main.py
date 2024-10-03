@@ -1,9 +1,11 @@
 from fastapi.testclient import TestClient
 
 from app.calculations import calculate_water_heating
-from app.models import WaterHeatingModel
+from app.models.water_heating import WaterHeatingModel
 from app.calculations import calculate_heating
-from app.models import SpaceHeatingModel
+from app.models.space_heating import SpaceHeatingModel
+from app.models.energy_plans import HouseholdEnergyPlan
+from app.services.configuration import  get_default_electricity_plan, get_default_natural_gas_plan, get_default_lpg_plan, get_default_usage_profile
 
 from app.main import app
 
@@ -35,7 +37,7 @@ def test_calculate_heating():
     """
     test_input = SpaceHeatingModel(area=100, insulation_level="medium", average_temperature=22, heating_type="electric")
     result = calculate_heating(test_input)
-    assert result == {"cost": test_input.area * 5
+    assert result == {"cost": test_input.area * 5}
 
 
 def test_calculate_water_heating():
@@ -46,3 +48,18 @@ def test_calculate_water_heating():
     result = calculate_water_heating(test_input)
     expected_energy = test_input.volume_litres * test_input.temp_increase_celsius * 0.001163 / test_input.efficiency
     assert result["energy_required"] == expected_energy
+
+def test_calculate_annual_costs():
+    """
+    Test the annual cost calculation logic.
+    """
+    my_plan = HouseholdEnergyPlan(
+        name="Basic Household Energy Plan",
+        electricity_plan=get_default_electricity_plan(),
+        natural_gas_plan=get_default_natural_gas_plan(),
+        lpg_plan=get_default_lpg_plan()
+    )
+    my_profile = get_default_usage_profile()
+    my_cost = my_plan.calculate_cost(my_profile)
+    expected_cost = 1111.25
+    assert my_cost == expected_cost

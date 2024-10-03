@@ -1,4 +1,5 @@
-from .models import SpaceHeatingModel, WaterHeatingModel
+from .models.space_heating import SpaceHeatingModel
+from .models.water_heating import WaterHeatingModel
 
 def calculate_heating(data: SpaceHeatingModel):
     # Implement calculation logic here
