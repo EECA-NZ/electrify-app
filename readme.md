@@ -29,7 +29,7 @@ It is assumed that the user is working in a powershell environment on a windows 
 
 1. **Run the test suite:**
     ```bash
-    python -m pytest
+    python -m pytest --verbose
     ```
 
 1. **Run a script using the library:**
