@@ -18,9 +18,7 @@ jobs:
     - name: Install package and other dependencies
       run: |
         python -m pip install --upgrade pip
-        cd home-efficiency-calculator
         pip install .
-        cd ..
         pip install pylint
 
     - name: Analysing the code with pylint
