@@ -11,6 +11,8 @@ from .usage_profiles import (
     DrivingYearlyFuelUsageProfile,
 )
 
+DAYS_IN_YEAR = 365.25
+
 class YourHomeAnswers(BaseModel):
     """
     Answers to questions about the user's home.
@@ -154,18 +156,65 @@ class CooktopAnswers(BaseModel):
         has_solar = solar.arraySizekW > 0
         if has_solar:
             has_solar = 1000 * min(solar.arraySize, solar.inverterSize)
-        return CooktopYearlyFuelUsageProfile(
-            elx_connection_days=365,
-            day_kwh=1000 * your_home.people_in_house,
-            night_kwh=300,
-            controlled_kwh=200,
-            natural_gas_connection_days=0,
-            natural_gas_kwh=0,
-            lpg_tank_rental_days=0,
-            lpg_kwh=0,
-            petrol_litres=0,
-            diesel_litres=0,
-        )
+        if self.cooktop == 'Electric induction':
+            total_kwh = 159 * 0.5 * (1 + your_home.people_in_house)
+            # All electricity use is during the day
+            return CooktopYearlyFuelUsageProfile(
+                elx_connection_days=365,
+                day_kwh=total_kwh,
+                night_kwh=0,
+                controlled_kwh=0,
+                natural_gas_connection_days=0,
+                natural_gas_kwh=0,
+                lpg_tank_rental_days=0,
+                lpg_kwh=0,
+                petrol_litres=0,
+                diesel_litres=0,
+            )
+        if self.cooktop == 'Electric (coil or ceramic)':
+            total_kwh = 176 * 0.5 * (1 + your_home.people_in_house)
+            # All electricity use is during the day
+            return CooktopYearlyFuelUsageProfile(
+                elx_connection_days=365,
+                day_kwh=total_kwh,
+                night_kwh=0,
+                controlled_kwh=0,
+                natural_gas_connection_days=0,
+                natural_gas_kwh=0,
+                lpg_tank_rental_days=0,
+                lpg_kwh=0,
+                petrol_litres=0,
+                diesel_litres=0,
+            )
+        if self.cooktop == 'Piped gas':
+            total_kwh = 412 * 0.5 * (1 + your_home.people_in_house)
+            return CooktopYearlyFuelUsageProfile(
+                elx_connection_days=365,
+                day_kwh=0,
+                night_kwh=0,
+                controlled_kwh=0,
+                natural_gas_connection_days=0,
+                natural_gas_kwh=total_kwh,
+                lpg_tank_rental_days=0,
+                lpg_kwh=0,
+                petrol_litres=0,
+                diesel_litres=0,
+            )
+        if self.cooktop == 'Bottled gas':
+            total_kwh = 412 * 0.5 * (1 + your_home.people_in_house)
+            return CooktopYearlyFuelUsageProfile(
+                elx_connection_days=365,
+                day_kwh=0,
+                night_kwh=0,
+                controlled_kwh=0,
+                natural_gas_connection_days=0,
+                natural_gas_kwh=0,
+                lpg_tank_rental_days=2 * DAYS_IN_YEAR,
+                lpg_kwh=total_kwh,
+                petrol_litres=0,
+                diesel_litres=0,
+            )
+        raise ValueError(f"Unknown cooktop type: {self.cooktop}")
 
 
 class DrivingAnswers(BaseModel):
