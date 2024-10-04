@@ -6,6 +6,8 @@ To run the tests, use the following command:
 python -m pytest --verbose
 """
 
+from pytest import approx
+
 from fastapi.testclient import TestClient
 
 from app.calculations import calculate_water_heating
@@ -129,3 +131,33 @@ def test_create_household_energy_profile_to_cost():
     household_energy_use = estimate_usage_from_profile(household_profile)
     total_energy_costs = my_plan.calculate_cost(household_energy_use)
     assert total_energy_costs > 0
+
+
+def test_cooking_energy_usage():
+    """
+    Test the energy usage pattern for cooking.
+    """
+    your_home = get_default_your_home_answers()
+    cooktop = get_default_cooktop_answers()
+    solar = get_default_solar_answers()
+    # Modeled energy use in kWh for each cooktop type (see 'Cooking' sheet)
+    # of supporting workbook
+    expected_energy_use = {
+        'Electric induction': [159, 239, 319, 398, 478, 558],
+        'Piped gas': [412, 618, 824, 1030, 1236, 1442],
+        'Bottled gas': [412, 618, 824, 1030, 1236, 1442, 1648],
+        'Electric (coil or ceramic)': [176, 264, 352, 440, 528, 617]
+    }
+    for cooktop_type, energy_use_values in expected_energy_use.items():
+        cooktop.cooktop = cooktop_type
+        for i, expected_kwh in enumerate(energy_use_values):
+            your_home.people_in_house = i + 1
+            cooktop_energy_use = cooktop.energy_usage_pattern(your_home, solar)
+            if cooktop.cooktop in ['Electric induction', 'Electric (coil or ceramic)']:
+                assert cooktop_energy_use.day_kwh == approx(expected_kwh, rel=1e-2)
+            elif cooktop.cooktop == 'Piped gas':
+                assert cooktop_energy_use.natural_gas_kwh == approx(expected_kwh, rel=1e-2)
+            elif cooktop.cooktop == 'Bottled gas':
+                assert cooktop_energy_use.lpg_kwh == approx(expected_kwh, rel=1e-2)
+            else:
+                raise ValueError(f"Unknown cooktop type: {cooktop.cooktop}")
