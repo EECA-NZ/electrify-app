@@ -1,3 +1,9 @@
+"""
+This script illustrates how to use a household's answers to calculate
+a household energy use profile. It then constructs an energy plan and
+calculates the total annual cost of energy for the household.
+"""
+
 from app.models.energy_plans import HouseholdEnergyPlan
 from app.models.answers import HouseholdEnergyProfileAnswers
 from app.services.energy_usage_estimator import estimate_usage_from_profile
