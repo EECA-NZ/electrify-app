@@ -1,3 +1,11 @@
+"""
+Currently all unit tests are housed here.
+
+To run the tests, use the following command:
+
+python -m pytest --verbose
+"""
+
 from fastapi.testclient import TestClient
 
 from app.calculations import calculate_water_heating
@@ -5,10 +13,16 @@ from app.models.water_heating import WaterHeatingModel
 from app.calculations import calculate_heating
 from app.models.space_heating import SpaceHeatingModel
 from app.models.energy_plans import HouseholdEnergyPlan
-from app.services.configuration import  get_default_electricity_plan, get_default_natural_gas_plan, get_default_lpg_plan, get_default_usage_profile
-from app.services.configuration import get_default_your_home_answers, get_default_heating_answers, get_default_hot_water_answers, get_default_cooktop_answers, get_default_driving_answers, get_default_solar_answers
-from app.models.answers import HouseholdEnergyProfileAnswers
-from app.models.energy_plans import HouseholdEnergyPlan
+from app.services.configuration import get_default_electricity_plan
+from app.services.configuration import get_default_natural_gas_plan
+from app.services.configuration import get_default_lpg_plan
+from app.services.configuration import get_default_usage_profile
+from app.services.configuration import get_default_your_home_answers
+from app.services.configuration import get_default_heating_answers
+from app.services.configuration import get_default_hot_water_answers
+from app.services.configuration import get_default_cooktop_answers
+from app.services.configuration import get_default_driving_answers
+from app.services.configuration import get_default_solar_answers
 from app.models.answers import HouseholdEnergyProfileAnswers
 from app.services.energy_usage_estimator import estimate_usage_from_profile
 
@@ -41,7 +55,12 @@ def test_calculate_heating():
     """
     Test the heating calculation logic.
     """
-    test_input = SpaceHeatingModel(area=100, insulation_level="medium", average_temperature=22, heating_type="electric")
+    test_input = SpaceHeatingModel(
+        area=100,
+        insulation_level="medium",
+        average_temperature=22,
+        heating_type="electric"
+    )
     result = calculate_heating(test_input)
     assert result == {"cost": test_input.area * 5}
 
@@ -52,7 +71,9 @@ def test_calculate_water_heating():
     """
     test_input = WaterHeatingModel(volume_litres=100, temp_increase_celsius=5, efficiency=0.8)
     result = calculate_water_heating(test_input)
-    expected_energy = test_input.volume_litres * test_input.temp_increase_celsius * 0.001163 / test_input.efficiency
+    expected_energy = (test_input.volume_litres *
+                       test_input.temp_increase_celsius *
+                       0.001163 / test_input.efficiency)
     assert result["energy_required"] == expected_energy
 
 def test_calculate_annual_costs():
@@ -71,6 +92,9 @@ def test_calculate_annual_costs():
     assert my_cost == expected_cost
 
 def test_create_household_profile_answers():
+    """
+    Test the creation of a household profile answers object.
+    """
     household_profile = HouseholdEnergyProfileAnswers(
         your_home=get_default_your_home_answers(),
         heating=get_default_heating_answers(),
@@ -85,6 +109,9 @@ def test_create_household_profile_answers():
 
 
 def test_create_household_energy_profile_to_cost():
+    """
+    Test constructing a profile and plan, and doing a cost calculation.
+    """
     household_profile = HouseholdEnergyProfileAnswers(
         your_home=get_default_your_home_answers(),
         heating=get_default_heating_answers(),

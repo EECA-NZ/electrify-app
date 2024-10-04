@@ -1,39 +1,49 @@
+"""
+This script processes river data from a GeoPackage file to extract the longest simple path
+
+Used as a helper script for the climate zone boundaries project.
+"""
+
+
+import itertools
 import geopandas as gpd
 import networkx as nx
 from shapely.geometry import MultiLineString, LineString, Point
 from shapely.ops import nearest_points
 
-# Setting a constant for the path to the GeoPackage
+# Setting a constant for the path to the GeoPackage.
+# File downloaded from https://data.linz.govt.nz/layer/103632-nz-river-name-lines-pilot/
 GPKG_PATH = './lds-nz-river-name-lines-pilot-GPKG/nz-river-name-lines-pilot.gpkg'
+
+# pylint: disable=too-many-locals
 
 def simplified_river_path(geometries, extend_to_end_points=None):
     """
     Extracts the longest simple path from a collection of MultiLineString geometries,
     representing parts of a river.
     """
-    G = nx.Graph()
+    mygraph = nx.Graph()
     for multi_line in geometries:
         if isinstance(multi_line, MultiLineString):
             for line in multi_line.geoms:
                 start, end = tuple(line.coords[0]), tuple(line.coords[-1])
-                G.add_edge(start, end, weight=line.length)
+                mygraph.add_edge(start, end, weight=line.length)
         elif isinstance(multi_line, LineString):
             start, end = tuple(multi_line.coords[0]), tuple(multi_line.coords[-1])
-            G.add_edge(start, end, weight=multi_line.length)
-    endpoints = [node for node, degree in G.degree() if degree == 1]
+            mygraph.add_edge(start, end, weight=multi_line.length)
+    endpoints = [node for node, degree in mygraph.degree() if degree == 1]
     if not endpoints:
         return None
     max_length = 0
     best_path = None
-    for i in range(len(endpoints)):
-        for j in range(i + 1, len(endpoints)):
-            try:
-                length, path = nx.single_source_dijkstra(G, endpoints[i], endpoints[j], weight='weight')
-                if length > max_length:
-                    max_length = length
-                    best_path = path
-            except nx.NetworkXNoPath:
-                continue
+    for (start, end) in itertools.combinations(endpoints, 2):
+        try:
+            length, path = nx.single_source_dijkstra(mygraph, start, end, weight='weight')
+            if length > max_length:
+                max_length = length
+                best_path = path
+        except nx.NetworkXNoPath:
+            continue
     if best_path:
         extended_path = best_path
         if extend_to_end_points:
@@ -44,7 +54,9 @@ def simplified_river_path(geometries, extend_to_end_points=None):
             nearest_start = nearest_points(path_start, start_point)[1]
             nearest_end = nearest_points(path_end, end_point)[1]
             # Extend path at the start and the end
-            extended_path = [tuple(nearest_start.coords[0])] + extended_path + [tuple(nearest_end.coords[0])]
+            extended_path = ([tuple(nearest_start.coords[0])] +
+                             extended_path +
+                             [tuple(nearest_end.coords[0])])
         return LineString([Point(node) for node in extended_path])
     return None
 

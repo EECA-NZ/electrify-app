@@ -1,3 +1,8 @@
+"""
+This script illustrates how to use a household's energy usage profile
+to calculate the total annual cost of energy for the household.
+"""
+
 from app.models.energy_plans import HouseholdEnergyPlan
 
 import app.services.configuration as cfg

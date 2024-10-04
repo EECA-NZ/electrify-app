@@ -25,11 +25,17 @@ It is assumed that the user is working in a powershell environment on a windows 
     ```bash
     python -m pip install --upgrade pip
     python -m pip install .
+    python -m pip install -r requirements-dev.txt
     ```
 
 1. **Run the test suite:**
     ```bash
     python -m pytest --verbose
+    ```
+
+1. **Run pylint:**
+    ```bash
+    python -m pylint --disable=R0801 $(git ls-files '*.py')
     ```
 
 1. **Run a script using the library:**
