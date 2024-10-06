@@ -5,9 +5,8 @@ This module provides functions to estimate a household's yearly fuel usage profi
 # pylint: disable=too-many-locals
 
 from app.models.answers import HouseholdEnergyProfileAnswers
-from app.models.usage_profiles import HouseholdYearlyFuelUsageProfile
-
-DAYS_IN_YEAR = 365.25
+from app.models.usage_profiles import HouseholdYearlyFuelUsageProfile, YearlyFuelUsageProfile
+from app.constants import DAYS_IN_YEAR, EMISSIONS_FACTORS
 
 
 def uses_electricity(profile: HouseholdEnergyProfileAnswers) -> bool:
@@ -60,10 +59,12 @@ def estimate_usage_from_profile(
     driving = answers.driving
     solar = answers.solar
 
-    heating_profile = heating.energy_usage_pattern(your_home, solar)
-    hot_water_profile = hot_water.energy_usage_pattern(your_home, solar)
-    cooktop_profile = cooktop.energy_usage_pattern(your_home, solar)
-    driving_profile = driving.energy_usage_pattern(your_home, solar)
+    heating_profile = heating.energy_usage_pattern(your_home)
+    hot_water_profile = hot_water.energy_usage_pattern(your_home)
+    cooktop_profile = cooktop.energy_usage_pattern(your_home)
+    driving_profile = driving.energy_usage_pattern(your_home)
+    # pylint: disable=unused-variable
+    solar_profile = solar.energy_generation(your_home)
 
     # Determine fixed charges
     elx_connection_days = 0
@@ -118,3 +119,26 @@ def estimate_usage_from_profile(
         petrol_litres=driving_profile.petrol_litres,
         diesel_litres=driving_profile.diesel_litres,
     )
+
+
+def emissions(usage_profile: YearlyFuelUsageProfile) -> float:
+    """
+    Return the household's yearly CO2 emissions in kg.
+    """
+    # List of emissions components
+    components = [
+        (usage_profile.day_kwh, "electricity"),
+        (usage_profile.night_kwh, "electricity"),
+        (usage_profile.controlled_kwh, "electricity"),
+        (usage_profile.natural_gas_kwh, "natural_gas"),
+        (usage_profile.lpg_kwh, "lpg"),
+        (usage_profile.petrol_litres, "petrol"),
+        (usage_profile.diesel_litres, "diesel"),
+    ]
+
+    # Calculate emissions with a default of 0 if the emission factor is missing
+    total_emissions = sum(
+        usage * EMISSIONS_FACTORS.get(fuel_type, 0) for usage, fuel_type in components
+    )
+
+    return total_emissions

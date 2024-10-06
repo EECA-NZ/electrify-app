@@ -27,6 +27,7 @@ from app.services.configuration import get_default_driving_answers
 from app.services.configuration import get_default_solar_answers
 from app.models.answers import HouseholdEnergyProfileAnswers
 from app.services.energy_usage_estimator import estimate_usage_from_profile
+from app.constants import DAYS_IN_YEAR
 
 
 from app.main import app
@@ -107,7 +108,7 @@ def test_create_household_profile_answers():
     )
     assert household_profile.your_home.people_in_house == 4
     assert household_profile.your_home.postcode == '0000'
-    assert household_profile.driving.vehicle == 'ICE'
+    assert household_profile.driving.vehicle_type == 'Petrol'
 
 
 def test_create_household_energy_profile_to_cost():
@@ -139,25 +140,72 @@ def test_cooking_energy_usage():
     """
     your_home = get_default_your_home_answers()
     cooktop = get_default_cooktop_answers()
-    solar = get_default_solar_answers()
-    # Modeled energy use in kWh for each cooktop type (see 'Cooking' sheet)
-    # of supporting workbook
+
+    # Modeled energy use in kWh for each cooktop type. This is based
+    # on a linearized energy use model that preserves the average
+    # household energy use for cooking. (See 'Cooking' sheet of
+    # supporting workbook.)
     expected_energy_use = {
         'Electric induction': [159, 239, 319, 398, 478, 558],
         'Piped gas': [412, 618, 824, 1030, 1236, 1442],
         'Bottled gas': [412, 618, 824, 1030, 1236, 1442, 1648],
         'Electric (coil or ceramic)': [176, 264, 352, 440, 528, 617]
     }
+
+    # Expected field values based on cooktop type
+    expected_values = {
+        'Electric induction': {
+            'elx_connection_days': DAYS_IN_YEAR,
+            'night_kwh': 0,
+            'controlled_kwh': 0,
+            'natural_gas_kwh': 0,
+            'lpg_kwh': 0,
+            'natural_gas_connection_days': 0,
+            'lpg_tank_rental_days': 0,
+        },
+        'Piped gas': {
+            'elx_connection_days': 0,
+            'day_kwh': 0,
+            'night_kwh': 0,
+            'controlled_kwh': 0,
+            'lpg_kwh': 0,
+            'natural_gas_connection_days': DAYS_IN_YEAR,
+            'lpg_tank_rental_days': 0,
+        },
+        'Bottled gas': {
+            'elx_connection_days': 0,
+            'day_kwh': 0,
+            'night_kwh': 0,
+            'controlled_kwh': 0,
+            'natural_gas_connection_days': 0,
+            'lpg_tank_rental_days': 2 * DAYS_IN_YEAR,
+        },
+        'Electric (coil or ceramic)': {
+            'elx_connection_days': DAYS_IN_YEAR,
+            'night_kwh': 0,
+            'controlled_kwh': 0,
+            'natural_gas_kwh': 0,
+            'lpg_kwh': 0,
+            'natural_gas_connection_days': 0,
+            'lpg_tank_rental_days': 0,
+        },
+    }
+
     for cooktop_type, energy_use_values in expected_energy_use.items():
         cooktop.cooktop = cooktop_type
         for i, expected_kwh in enumerate(energy_use_values):
             your_home.people_in_house = i + 1
-            cooktop_energy_use = cooktop.energy_usage_pattern(your_home, solar)
-            if cooktop.cooktop in ['Electric induction', 'Electric (coil or ceramic)']:
+            cooktop_energy_use = cooktop.energy_usage_pattern(your_home)
+
+            # Assertions for expected energy usage (day_kwh, lpg_kwh, natural_gas_kwh)
+            if cooktop_type in ['Electric induction', 'Electric (coil or ceramic)']:
                 assert cooktop_energy_use.day_kwh == approx(expected_kwh, rel=1e-2)
-            elif cooktop.cooktop == 'Piped gas':
+            elif cooktop_type == 'Piped gas':
                 assert cooktop_energy_use.natural_gas_kwh == approx(expected_kwh, rel=1e-2)
-            elif cooktop.cooktop == 'Bottled gas':
+            elif cooktop_type == 'Bottled gas':
                 assert cooktop_energy_use.lpg_kwh == approx(expected_kwh, rel=1e-2)
-            else:
-                raise ValueError(f"Unknown cooktop type: {cooktop.cooktop}")
+
+            # General assertions based on the cooktop type
+            for field, expected_value in expected_values[cooktop_type].items():
+                assert getattr(cooktop_energy_use, field) == expected_value,\
+                    f"{field} failed for {cooktop_type}"

@@ -73,8 +73,8 @@ def get_default_heating_answers():
     """
     return HeatingAnswers(
         main_heating_source='Heat pump',
-        heating_during_day='Yes',
-        insulation_quality='Somewhere in between'
+        heating_during_day='5-7 days a week',
+        insulation_quality='Moderately insulated'
     )
 
 def get_default_hot_water_answers():
@@ -82,7 +82,7 @@ def get_default_hot_water_answers():
     Return a default 'hot water' answers object.
     """
     return HotWaterAnswers(
-        hot_water_usage='Medium',
+        hot_water_usage='Average',
         hot_water_heating_source='Electric hot water cylinder'
     )
 
@@ -99,8 +99,9 @@ def get_default_driving_answers():
     Return a default 'driving' answers object.
     """
     return DrivingAnswers(
-        vehicle='ICE',
-        usage='Medium'
+        vehicle_type='Petrol',
+        vehicle_size='Medium',
+        km_per_week='200'
     )
 
 def get_default_solar_answers():
@@ -108,8 +109,7 @@ def get_default_solar_answers():
     Return a default 'solar' answers object.
     """
     return SolarAnswers(
-        arraySizekW=0.0,
-        inverterSizekW=0.0
+        hasSolar=True
     )
 
 def get_default_household_energy_profile():
