@@ -12,7 +12,7 @@ from .usage_profiles import (
     SolarYearlyFuelGenerationProfile,
 )
 from ..services import spatial
-from ..constants import DAYS_IN_YEAR, AVERAGE_HOUSEHOLD_SIZE, SOLAR_RESOURCE
+from ..constants import DAYS_IN_YEAR, AVERAGE_HOUSEHOLD_SIZE, SOLAR_RESOURCE_KWH_PER_DAY
 
 
 class YourHomeAnswers(BaseModel):
@@ -237,7 +237,7 @@ class SolarAnswers(BaseModel):
         climate_zone = spatial.climate_zone(your_home.postcode)
         annual_generation_kwh = 0
         if self.hasSolar:
-            annual_generation_kwh = SOLAR_RESOURCE[climate_zone] * DAYS_IN_YEAR
+            annual_generation_kwh = SOLAR_RESOURCE_KWH_PER_DAY[climate_zone] * DAYS_IN_YEAR
 
         return SolarYearlyFuelGenerationProfile(
             elx_connection_days=0,

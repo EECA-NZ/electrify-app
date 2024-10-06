@@ -16,4 +16,6 @@ def climate_zone(postcode: str) -> str:
     str
         The climate zone for the given postcode.
     """
-    return "CZ1"
+    if postcode == "0000":
+        return "CZ1"
+    return "CZ2"
