@@ -1,0 +1,59 @@
+\documentclass{article}
+\usepackage{amsmath}
+\usepackage{amssymb}
+
+\begin{document}
+
+\title{Analysis of Mean Energy Use Deviation}
+\author{EECA}
+\date{\today}
+
+\maketitle 
+
+\section{Introduction}
+This is a demonstration that the mean energy use, \(E(n)\), obtained from a modeled energy consumption based on a linear function of household occupancy, preserves the mean as originally observed in empirical data.
+
+\section{Model Definitions}
+We define several variables relating household occupancy and energy use:
+\begin{itemize}
+    \item \(n\): A variable representing the number of occupants in each household.
+    \item \(\hat{n} = 2.69\): The average number of occupants, on the basis of which the mean energy use, \(\hat{E}\), was calculated.
+    \item \(dE(n)\): The deviation of energy use from the mean, defined as \[dE(n) = E(n) - \hat{E},\] where \(E(n)\) is the modelled energy use for a household with \(n\) occupants.
+\end{itemize}
+
+\section{Energy Use Model}
+The energy use as a function of the number of occupants is modeled by:
+\[
+E(n) = \frac{\hat{E}}{3.69} \cdot (n + 1)
+\]
+where \(\hat{E}\) is the energy use calculated for \(\hat{n}\).
+
+\section{Calculation of Mean Deviation}
+The deviation from the mean energy use is given by:
+\[
+dE(n) = E(n) - \hat{E}
+\]
+Substituting the expression for \(E(n)\) from our model, we get:
+\[
+dE(n) = \left(\frac{\hat{E}}{3.69} \cdot (n + 1)\right) - \hat{E}
+\]
+This simplifies to:
+\[
+dE(n) = \frac{\hat{E}}{3.69} \cdot (n - 2.69)
+\]
+So \(dE(n)\) is proportional to the deviation of the number of occupants from the mean, \((n - \hat{n})\), with proportionality constant \(\frac{\hat{E}}{3.69}\).
+
+\section{Expectation of Deviation}
+The expected value of the deviation, given the linearity of expectation, is:
+\[
+\mathbb{E}[dE(n)] = \mathbb{E}\left[\frac{\hat{E}}{3.69} \cdot (n - \hat{n})\right]
+\]
+Assuming the mean of the random variable \(n\) is \(\hat{n}\), we have:
+\[
+\mathbb{E}[dE(n)] = \frac{\hat{E}}{3.69} \cdot (\mathbb{E}[n] - \hat{n}) = \frac{\hat{E}}{3.69} \cdot 0 = 0
+\]
+
+\section{Conclusion}
+The expected value of \(dE(n)\) being zero confirms that the model preserves the mean energy use, indicating that any deviations in household size from the mean do not bias the average modeled energy consumption. This implies that our model accurately represents the energy use across a population, without systematic errors.
+
+\end{document}

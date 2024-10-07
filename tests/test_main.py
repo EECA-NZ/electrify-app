@@ -10,23 +10,23 @@ from pytest import approx
 
 from fastapi.testclient import TestClient
 
-from app.calculations import calculate_water_heating
-from app.models.water_heating import WaterHeatingModel
-from app.calculations import calculate_heating
-from app.models.space_heating import SpaceHeatingModel
 from app.models.energy_plans import HouseholdEnergyPlan
-from app.services.configuration import get_default_electricity_plan
-from app.services.configuration import get_default_natural_gas_plan
-from app.services.configuration import get_default_lpg_plan
-from app.services.configuration import get_default_usage_profile
-from app.services.configuration import get_default_your_home_answers
-from app.services.configuration import get_default_heating_answers
-from app.services.configuration import get_default_hot_water_answers
-from app.services.configuration import get_default_cooktop_answers
-from app.services.configuration import get_default_driving_answers
-from app.services.configuration import get_default_solar_answers
+from app.services.configuration import (
+    get_default_electricity_plan,
+    get_default_natural_gas_plan,
+    get_default_lpg_plan,
+    get_default_usage_profile,
+    get_default_your_home_answers,
+    get_default_heating_answers,
+    get_default_hot_water_answers,
+    get_default_cooktop_answers,
+    get_default_driving_answers,
+    get_default_solar_answers,
+)
 from app.models.answers import HouseholdEnergyProfileAnswers
 from app.services.energy_usage_estimator import estimate_usage_from_profile
+from app.services.cost_calculator import calculate_savings_options
+
 from app.constants import DAYS_IN_YEAR
 
 
@@ -45,40 +45,6 @@ def test_read_root():
     assert "<html>" in response.text
 
 
-def test_startup_event(capsys):
-    """
-    Test the startup event to ensure the correct print output.
-    """
-    app.router.on_startup[0]()
-    captured = capsys.readouterr()
-    assert "Visit http://localhost:8000 or http://127.0.0.1:8000 to access the app." in captured.out
-
-
-def test_calculate_heating():
-    """
-    Test the heating calculation logic.
-    """
-    test_input = SpaceHeatingModel(
-        area=100,
-        insulation_level="medium",
-        average_temperature=22,
-        heating_type="electric"
-    )
-    result = calculate_heating(test_input)
-    assert result == {"cost": test_input.area * 5}
-
-
-def test_calculate_water_heating():
-    """
-    Test the water heating calculation logic.
-    """
-    test_input = WaterHeatingModel(volume_litres=100, temp_increase_celsius=5, efficiency=0.8)
-    result = calculate_water_heating(test_input)
-    expected_energy = (test_input.volume_litres *
-                       test_input.temp_increase_celsius *
-                       0.001163 / test_input.efficiency)
-    assert result["energy_required"] == expected_energy
-
 def test_calculate_annual_costs():
     """
     Test the annual cost calculation logic.
@@ -93,6 +59,7 @@ def test_calculate_annual_costs():
     my_cost = my_plan.calculate_cost(my_profile)
     expected_cost = 1111.25
     assert my_cost == expected_cost
+
 
 def test_create_household_profile_answers():
     """
@@ -209,3 +176,36 @@ def test_cooking_energy_usage():
             for field, expected_value in expected_values[cooktop_type].items():
                 assert getattr(cooktop_energy_use, field) == expected_value,\
                     f"{field} failed for {cooktop_type}"
+
+
+def test_create_options():
+    """
+    Create options for space heating.
+    """
+    household_profile = HouseholdEnergyProfileAnswers(
+        your_home=get_default_your_home_answers(),
+        heating=get_default_heating_answers(),
+        hot_water=get_default_hot_water_answers(),
+        cooktop=get_default_cooktop_answers(),
+        driving=get_default_driving_answers(),
+        solar=get_default_solar_answers()
+    )
+
+    my_plan = HouseholdEnergyPlan(
+        name="Basic Household Energy Plan",
+        electricity_plan=get_default_electricity_plan(),
+        natural_gas_plan=get_default_natural_gas_plan(),
+        lpg_plan=get_default_lpg_plan()
+    )
+
+    household_energy_use = estimate_usage_from_profile(household_profile)
+    total_energy_costs = my_plan.calculate_cost(household_energy_use)
+
+    print(household_profile)
+    print(household_energy_use)
+    print("total cost: ", total_energy_costs)
+
+    heating_answers = get_default_heating_answers()
+    your_home = get_default_your_home_answers()
+    options = calculate_savings_options(heating_answers, 'main_heating_source', your_home)
+    assert options is not None

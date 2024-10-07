@@ -18,28 +18,25 @@ def get_default_electricity_plan():
         nzd_per_day_kwh=0.20,
         nzd_per_night_kwh=0.18,
         nzd_per_controlled_kwh=0.15,
-        daily_charge=1.25
+        daily_charge=1.25,
     )
+
 
 def get_default_natural_gas_plan():
     """
     Return a default natural gas plan.
     """
     return NaturalGasPlan(
-        name="Basic Natural Gas Plan",
-        per_natural_gas_kwh=0.10,
-        daily_charge=1.5
+        name="Basic Natural Gas Plan", per_natural_gas_kwh=0.10, daily_charge=1.5
     )
+
 
 def get_default_lpg_plan():
     """
     Return a default LPG plan.
     """
-    return LPGPlan(
-        name="Basic LPG Plan",
-        per_lpg_kwh=0.25,
-        daily_charge=80/365.25
-    )
+    return LPGPlan(name="Basic LPG Plan", per_lpg_kwh=0.25, daily_charge=80 / 365.25)
+
 
 def get_default_usage_profile():
     """
@@ -58,63 +55,62 @@ def get_default_usage_profile():
         diesel_litres=0,
     )
 
+
 def get_default_your_home_answers():
     """
     Return a default 'your home' answers object.
     """
-    return YourHomeAnswers(
-        people_in_house=4,
-        postcode='0000'
-    )
+    return YourHomeAnswers(people_in_house=4, postcode="0000")
+
 
 def get_default_heating_answers():
     """
     Return a default 'heating' answers object.
     """
     return HeatingAnswers(
-        main_heating_source='Electric heater',
-        alternative_main_heating_source='Heat pump',
-        heating_during_day='5-7 days a week',
-        insulation_quality='Moderately insulated'
+        main_heating_source="Electric heater",
+        alternative_main_heating_source="Heat pump",
+        heating_during_day="5-7 days a week",
+        insulation_quality="Moderately insulated",
     )
+
 
 def get_default_hot_water_answers():
     """
     Return a default 'hot water' answers object.
     """
     return HotWaterAnswers(
-        hot_water_usage='Average',
-        hot_water_heating_source='Electric hot water cylinder',
-        alternative_hot_water_heating_source='Hot water heat pump'
+        hot_water_usage="Average",
+        hot_water_heating_source="Electric hot water cylinder",
+        alternative_hot_water_heating_source="Hot water heat pump",
     )
+
 
 def get_default_cooktop_answers():
     """
     Return a default 'cooktop' answers object.
     """
-    return CooktopAnswers(
-        cooktop='Piped gas',
-        alternative_cooktop='Electric induction'
-    )
+    return CooktopAnswers(cooktop="Piped gas", alternative_cooktop="Electric induction")
+
 
 def get_default_driving_answers():
     """
     Return a default 'driving' answers object.
     """
     return DrivingAnswers(
-        vehicle_type='Petrol',
-        alternative_vehicle_type='Electric',
-        vehicle_size='Medium',
-        km_per_week='200'
+        vehicle_type="Petrol",
+        alternative_vehicle_type="Electric",
+        vehicle_size="Medium",
+        km_per_week="200",
     )
+
 
 def get_default_solar_answers():
     """
     Return a default 'solar' answers object.
     """
-    return SolarAnswers(
-        hasSolar=True
-    )
+    return SolarAnswers(hasSolar=True)
+
 
 def get_default_household_energy_profile():
     """
@@ -127,5 +123,5 @@ def get_default_household_energy_profile():
         "cooktop": get_default_cooktop_answers(),
         "driving": get_default_driving_answers(),
         "solar": get_default_solar_answers(),
-        "usage_profile": get_default_usage_profile()
+        "usage_profile": get_default_usage_profile(),
     }
