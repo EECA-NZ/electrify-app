@@ -23,10 +23,17 @@ jobs:
         pip install pytest coverage
         pip install .
         pip install -r requirements-dev.txt
-  
-    - name: Run tests
+
+    - name: Run tests and generate coverage
       run: |
         coverage run -m pytest
+        coverage html
 
-    - name: Generate coverage report
+    - name: Upload coverage report
+      uses: actions/upload-artifact@v3
+      with:
+        name: coverage-report
+        path: htmlcov
+
+    - name: Generate coverage report in console
       run: coverage report
