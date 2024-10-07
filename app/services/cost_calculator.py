@@ -56,3 +56,17 @@ def find_biggest_savings(current_profile, possible_profiles, pricing_structures)
                 best_plan = plan
                 best_profile = profile
     return max_savings, best_plan, best_profile
+
+# pylint: disable=unused-argument
+def calculate_savings(answers, your_home):
+    """
+    Placeholder function to calculate dollar savings based on user input.
+    This could use factors such as current fuel cost, energy use, etc.
+    """
+    return 100  # Placeholder for actual savings calculation logic
+
+def calculate_emissions_reduction(answers, your_home):
+    """
+    Placeholder function to calculate percentage emissions reduction based on user input.
+    """
+    return 20  # Placeholder for actual emissions reduction logic

@@ -5,7 +5,7 @@ Main module to run the FastAPI application.
 from fastapi import FastAPI, responses
 import uvicorn
 
-from .api import heating, water_heating
+from .api import household_energy_profile
 
 app = FastAPI()
 
@@ -19,8 +19,7 @@ def main():
     """Function to redirect to the documentation."""
     return responses.RedirectResponse(url='/docs/')
 
-app.include_router(heating.router)
-app.include_router(water_heating.router)
+app.include_router(household_energy_profile.router)
 
 def run():
     """Function to run the Uvicorn server."""
