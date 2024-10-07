@@ -33,6 +33,12 @@ It is assumed that the user is working in a powershell environment on a windows 
     python -m pytest --verbose
     ```
 
+1. **Run the test suite with coverage:**
+    ```bash
+    python -m coverage run -m pytest
+    python -m coverage report
+    ```
+
 1. **Run pylint:**
     ```bash
     python -m pylint --disable=R0801 $(git ls-files '*.py')
