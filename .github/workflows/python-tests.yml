@@ -29,11 +29,15 @@ jobs:
         coverage run -m pytest
         coverage html
 
-    - name: Upload coverage report
-      uses: actions/upload-artifact@v3
-      with:
-        name: coverage-report
-        path: htmlcov
+    - name: Deploy coverage report to GitHub Pages
+      if: success()
+      run: |
+        git config --global user.name "GitHub Actions"
+        git config --global user.email "actions@github.com"
+        git checkout -b gh-pages
+        git add htmlcov  # Add the HTML coverage report directory
+        git commit -m "Deploy coverage report"
+        git push -f https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }} gh-pages
 
     - name: Generate coverage report in console
       run: coverage report
