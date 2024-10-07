@@ -43,12 +43,12 @@ class DrivingYearlyFuelUsageProfile(YearlyFuelUsageProfile):
     Driving yearly fuel usage profile.
     """
 
-class HouseholdYearlyFuelUsageProfile(YearlyFuelUsageProfile):
-    """
-    Overall household yearly fuel usage profile.
-    """
-
 class SolarYearlyFuelGenerationProfile(YearlyFuelUsageProfile):
     """
     Yearly solar energy generation profile.
+    """
+
+class HouseholdYearlyFuelUsageProfile(YearlyFuelUsageProfile):
+    """
+    Overall household yearly fuel usage profile.
     """

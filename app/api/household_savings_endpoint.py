@@ -4,7 +4,7 @@ Module for the household energy profile endpoint.
 
 from fastapi import APIRouter
 from pydantic import BaseModel
-from ..models.answers import HouseholdEnergyProfileAnswers
+from ..models.user_answers import HouseholdEnergyProfileAnswers
 from ..services.cost_calculator import calculate_savings, calculate_emissions_reduction
 
 router = APIRouter()

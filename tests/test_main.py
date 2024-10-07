@@ -6,7 +6,7 @@ To run the tests, use the following command:
 python -m pytest --verbose
 """
 
-from pytest import approx
+from pytest import approx, raises
 
 from fastapi.testclient import TestClient
 
@@ -22,14 +22,16 @@ from app.services.configuration import (
     get_default_cooktop_answers,
     get_default_driving_answers,
     get_default_solar_answers,
+    get_default_household_energy_profile,
 )
-from app.models.answers import HouseholdEnergyProfileAnswers
-from app.services.energy_usage_estimator import estimate_usage_from_profile
+from app.models.user_answers import (
+    YourHomeAnswers,
+    HouseholdEnergyProfileAnswers,
+    CooktopAnswers,
+)
+from app.services.energy_calculator import estimate_usage_from_profile
 from app.services.cost_calculator import calculate_savings_options
-
 from app.constants import DAYS_IN_YEAR
-
-
 from app.main import app
 
 
@@ -209,3 +211,23 @@ def test_create_options():
     your_home = get_default_your_home_answers()
     options = calculate_savings_options(heating_answers, 'main_heating_source', your_home)
     assert options is not None
+
+
+def test_invalid_cooktop_type():
+    """
+    Test that an invalid cooktop type raises a ValueError.
+    """
+    your_home = YourHomeAnswers(people_in_house=3, postcode="1234")
+    cooktop_answers = CooktopAnswers(cooktop="Piped gas", alternative_cooktop="Piped gas")
+    setattr(cooktop_answers, "cooktop", "Invalid type")
+    setattr(cooktop_answers, "alternative_cooktop", "Invalid type")
+    with raises(ValueError, match="Unknown cooktop type: Invalid type"):
+        cooktop_answers.energy_usage_pattern(your_home)
+
+
+def test_get_default_household_energy_profile():
+    """
+    Test the get_default_household_energy_profile function.
+    """
+    household_energy_profile = get_default_household_energy_profile()
+    assert household_energy_profile['your_home'].people_in_house == 4

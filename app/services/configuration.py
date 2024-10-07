@@ -4,9 +4,9 @@ Configuration functions including default values for energy plans, usage profile
 
 from ..models.energy_plans import ElectricityPlan, NaturalGasPlan, LPGPlan
 from ..models.usage_profiles import HouseholdYearlyFuelUsageProfile
-from ..models.answers import YourHomeAnswers, HeatingAnswers
-from ..models.answers import HotWaterAnswers, CooktopAnswers
-from ..models.answers import DrivingAnswers, SolarAnswers
+from ..models.user_answers import YourHomeAnswers, HeatingAnswers
+from ..models.user_answers import HotWaterAnswers, CooktopAnswers
+from ..models.user_answers import DrivingAnswers, SolarAnswers
 
 
 def get_default_electricity_plan():

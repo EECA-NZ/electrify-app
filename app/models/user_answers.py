@@ -11,7 +11,7 @@ from .usage_profiles import (
     DrivingYearlyFuelUsageProfile,
     SolarYearlyFuelGenerationProfile,
 )
-from ..services import climate_zone
+from ..services import get_climate_zone
 from ..constants import DAYS_IN_YEAR, AVERAGE_HOUSEHOLD_SIZE, SOLAR_RESOURCE_KWH_PER_DAY
 
 
@@ -300,7 +300,7 @@ class SolarAnswers(BaseModel):
         SolarYearlyFuelUsageProfile
             The yearly fuel usage profile for solar energy generation.
         """
-        my_climate_zone = climate_zone.climate_zone(your_home.postcode)
+        my_climate_zone = get_climate_zone.climate_zone(your_home.postcode)
         annual_generation_kwh = 0
         if self.hasSolar:
             annual_generation_kwh = (

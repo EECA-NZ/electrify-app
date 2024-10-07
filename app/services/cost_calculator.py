@@ -2,9 +2,11 @@
 This module provides functions to optimize the cost of energy for a household.
 """
 
-from .energy_usage_estimator import estimate_usage_from_profile
-from .energy_plans import energy_plan
-from .energy_usage_estimator import emissions
+from .energy_calculator import (
+    estimate_usage_from_profile,
+    emissions,
+)
+from .get_energy_plans import energy_plan
 
 
 def find_lowest_cost(profiles, pricing_structures):
