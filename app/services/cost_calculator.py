@@ -28,35 +28,6 @@ def find_lowest_cost(profiles, pricing_structures):
                 best_profile = profile
     return min_cost, best_plan, best_profile
 
-def find_biggest_savings(current_profile, possible_profiles, pricing_structures):
-    """
-    Find the biggest savings possible for a household
-
-    Args:
-    current_profile: HouseholdEnergyProfileAnswers object
-    possible_profiles: list of HouseholdEnergyProfileAnswers objects
-    pricing_structures: list of HouseholdEnergyPlan objects
-
-    Returns:
-    max_savings: float, the biggest savings found
-    best_plan: HouseholdEnergyPlan object, the best plan found
-    best_profile: HouseholdEnergyProfileAnswers object, the best
-    profile found
-    """
-    max_savings = 0
-    best_plan = None
-    best_profile = None
-    for plan in pricing_structures:
-        current_cost = plan.calculate_cost(current_profile)
-        for profile in possible_profiles:
-            cost = plan.calculate_cost(profile)
-            savings = current_cost - cost
-            if savings > max_savings:
-                max_savings = savings
-                best_plan = plan
-                best_profile = profile
-    return max_savings, best_plan, best_profile
-
 # pylint: disable=unused-argument
 def calculate_savings(answers, your_home):
     """
