@@ -47,11 +47,7 @@ def calculate_savings_options(answers, field, your_home):
     for option in options:
         # Calculate savings for each option
         result[option] = calculate_savings_for_option(
-            option,
-            field,
-            answers,
-            your_plan,
-            your_home
+            option, field, answers, your_plan, your_home
         )
     return result
 
@@ -66,9 +62,7 @@ def calculate_current_usage_and_costs(answers, your_plan, your_home):
     return household_energy_costs, household_emissions
 
 
-def calculate_savings_for_option(
-    option, field, answers, your_plan, your_home
-):
+def calculate_savings_for_option(option, field, answers, your_plan, your_home):
     """
     Calculate the savings and emissions reduction for a given option.
     """

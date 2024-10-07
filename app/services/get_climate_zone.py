@@ -1,6 +1,8 @@
 """
 Functions relating to spatial data. Map postcodes to climate zones
 """
+
+
 def climate_zone(postcode: str) -> str:
     """
     Return the climate zone for the given postcode.

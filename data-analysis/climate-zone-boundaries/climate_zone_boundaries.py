@@ -265,7 +265,7 @@ def main():
         OUTPUT_SHAPEFILE_PATH.replace(".shp", ".geojson"), driver="GeoJSON"
     )
     print(
-        f"Saved merged climate zone boundaries to " \
+        f"Saved merged climate zone boundaries to "
         f"{OUTPUT_SHAPEFILE_PATH.replace('.shp', '.geojson')}"
     )
 

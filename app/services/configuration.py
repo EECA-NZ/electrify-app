@@ -109,7 +109,7 @@ def get_default_solar_answers():
     """
     Return a default 'solar' answers object.
     """
-    return SolarAnswers(hasSolar=True)
+    return SolarAnswers(hasSolar=False)
 
 
 def get_default_household_energy_profile():

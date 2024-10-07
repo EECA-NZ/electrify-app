@@ -37,6 +37,7 @@ It is assumed that the user is working in a powershell environment on a windows 
     ```bash
     python -m coverage run -m pytest
     python -m coverage report
+    python -m coverage html
     ```
 
 1. **Run pylint:**

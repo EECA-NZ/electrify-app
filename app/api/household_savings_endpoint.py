@@ -3,29 +3,11 @@ Module for the household energy profile endpoint.
 """
 
 from fastapi import APIRouter
-from pydantic import BaseModel
 from ..models.user_answers import HouseholdEnergyProfileAnswers
 from ..services.cost_calculator import calculate_savings, calculate_emissions_reduction
+from ..models.response_models import SavingsAndEmissionsResponse
 
 router = APIRouter()
-
-
-class SavingsAndEmissionsResponse(BaseModel):
-    """
-    Response model for the household energy profile endpoint.
-    """
-
-    heating_savings: float = 0
-    hot_water_savings: float = 0
-    cooktop_savings: float = 0
-    driving_savings: float = 0
-    overall_savings: float = 0
-    heating_emissions_reduction: float = 0
-    hot_water_emissions_reduction: float = 0
-    cooktop_emissions_reduction: float = 0
-    driving_emissions_reduction: float = 0
-    overall_emissions_reduction: float = 0
-    average_household_savings: float = 1000  # Placeholder when no data is provided
 
 
 @router.post("/household-energy-profile/")
@@ -100,4 +82,4 @@ def household_energy_profile(profile: HouseholdEnergyProfileAnswers):
         overall_emissions_reduction=overall_emissions_reduction,
     )
 
-    return {"success": True, "response": response}
+    return response

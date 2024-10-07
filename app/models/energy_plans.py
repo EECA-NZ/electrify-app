@@ -9,6 +9,7 @@ class ElectricityPlan(BaseModel):
     """
     Electricity plan for a household.
     """
+
     name: str
     nzd_per_day_kwh: float
     nzd_per_night_kwh: float
@@ -37,6 +38,7 @@ class NaturalGasPlan(BaseModel):
     """
     Natural gas plan for a household.
     """
+
     name: str
     per_natural_gas_kwh: float
     daily_charge: float
@@ -61,6 +63,7 @@ class LPGPlan(BaseModel):
     """
     LPG plan for a household.
     """
+
     name: str
     per_lpg_kwh: float
     daily_charge: float
@@ -85,6 +88,7 @@ class HouseholdEnergyPlan(BaseModel):
     """
     Overall household energy plan.
     """
+
     name: str
     electricity_plan: ElectricityPlan
     natural_gas_plan: NaturalGasPlan

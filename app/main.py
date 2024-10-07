@@ -15,6 +15,7 @@ from .api.component_savings_endpoints import app as component_savings_app
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
+
 @asynccontextmanager
 async def lifespan(app_instance: FastAPI):
     """
@@ -27,15 +28,18 @@ async def lifespan(app_instance: FastAPI):
     # Shutdown logic
     logger.info("Application is shutting down...")
 
+
 # Pass the lifespan handler when creating the FastAPI instance
 app = FastAPI(lifespan=lifespan)
+
 
 @app.get("/")
 def main():
     """
     Function to redirect to the documentation.
     """
-    return responses.RedirectResponse(url='/docs/')
+    return responses.RedirectResponse(url="/docs/")
+
 
 # Include the router for the household energy profile
 app.include_router(household_savings_endpoint.router)
@@ -43,11 +47,13 @@ app.include_router(household_savings_endpoint.router)
 # Include the router for component savings endpoints
 app.include_router(component_savings_app.router)
 
+
 def run():
     """
     Function to run the Uvicorn server.
     """
     uvicorn.run("app.main:app", host="0.0.0.0", port=8000, reload=True)
+
 
 if __name__ == "__main__":
     run()

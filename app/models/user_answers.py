@@ -94,6 +94,7 @@ class HeatingAnswers(BaseModel):
             diesel_litres=0,
         )
 
+
 class HotWaterAnswers(BaseModel):
     """
     Answers to questions about the user's hot water heating.

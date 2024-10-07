@@ -6,10 +6,12 @@ might not be relevant for some areas.
 
 from pydantic import BaseModel
 
+
 class YearlyFuelUsageProfile(BaseModel):
     """
     Base class for yearly fuel usage profiles for different household areas.
     """
+
     elx_connection_days: float
     day_kwh: float
     night_kwh: float
@@ -21,32 +23,39 @@ class YearlyFuelUsageProfile(BaseModel):
     petrol_litres: float
     diesel_litres: float
 
+
 # Specific profiles inherit from YearlyFuelUsageProfile
+
 
 class HeatingYearlyFuelUsageProfile(YearlyFuelUsageProfile):
     """
     Space heating yearly fuel usage profile.
     """
 
+
 class HotWaterYearlyFuelUsageProfile(YearlyFuelUsageProfile):
     """
     Hot water yearly fuel usage profile.
     """
+
 
 class CooktopYearlyFuelUsageProfile(YearlyFuelUsageProfile):
     """
     Cooktop yearly fuel usage profile.
     """
 
+
 class DrivingYearlyFuelUsageProfile(YearlyFuelUsageProfile):
     """
     Driving yearly fuel usage profile.
     """
 
+
 class SolarYearlyFuelGenerationProfile(YearlyFuelUsageProfile):
     """
     Yearly solar energy generation profile.
     """
+
 
 class HouseholdYearlyFuelUsageProfile(YearlyFuelUsageProfile):
     """

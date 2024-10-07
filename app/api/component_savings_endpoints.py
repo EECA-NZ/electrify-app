@@ -19,6 +19,7 @@ logger = logging.getLogger(__name__)
 
 app = FastAPI()
 
+
 # pylint: disable=broad-exception-caught
 @app.post("/heating/savings")
 async def heating_savings(heating_answers: HeatingAnswers, your_home: YourHomeAnswers):

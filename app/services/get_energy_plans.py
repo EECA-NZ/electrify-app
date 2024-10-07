@@ -1,26 +1,9 @@
 """
 Functions relating to spatial data. Map postcodes to climate zones and EDB zones.
 """
+
 from ..models.energy_plans import HouseholdEnergyPlan, ElectricityPlan
 from .configuration import get_default_natural_gas_plan, get_default_lpg_plan
-
-def climate_zone(postcode: str) -> str:
-    """
-    Return the climate zone for the given postcode.
-
-    Parameters
-    ----------
-    postcode : str
-        The postcode to lookup.
-
-    Returns
-    -------
-    str
-        The climate zone for the given postcode.
-    """
-    if postcode == "0000":
-        return "CZ1"
-    return "CZ2"
 
 
 def edb_zone(postcode: str) -> str:
@@ -65,11 +48,11 @@ def energy_plan(postcode: str) -> HouseholdEnergyPlan:
         nzd_per_day_kwh=nzd_per_day_kwh,
         nzd_per_night_kwh=0.18,
         nzd_per_controlled_kwh=0.15,
-        daily_charge=1.25
+        daily_charge=1.25,
     )
     return HouseholdEnergyPlan(
         name=f"Plan for {postcode}",
         electricity_plan=electricity_plan,
         natural_gas_plan=get_default_natural_gas_plan(),
-        lpg_plan=get_default_lpg_plan()
+        lpg_plan=get_default_lpg_plan(),
     )
