@@ -14,29 +14,41 @@ def test_household_energy_profile():
     """
 
     profile_data = {
-        "your_home": {"people_in_house": 3, "postcode": "1234"},
+        "your_home": {
+            "people_in_house": 3,
+            "postcode": "1234",
+            "disconnect_gas": True,
+            "user_provided": True,
+        },
         "heating": {
             "main_heating_source": "Heat pump",
             "alternative_main_heating_source": "Wood burner",
             "heating_during_day": "5-7 days a week",
             "insulation_quality": "Moderately insulated",
+            "user_provided": True,
         },
         "hot_water": {
             "hot_water_usage": "Average",
             "hot_water_heating_source": "Electric hot water cylinder",
             "alternative_hot_water_heating_source": "Hot water heat pump",
+            "user_provided": True,
         },
         "cooktop": {
             "cooktop": "Electric induction",
             "alternative_cooktop": "Piped gas",
+            "user_provided": True,
         },
         "driving": {
             "vehicle_type": "Hybrid",
             "alternative_vehicle_type": "Electric",
             "vehicle_size": "Medium",
             "km_per_week": "200",
+            "user_provided": True,
         },
-        "solar": {"hasSolar": False},
+        "solar": {
+            "hasSolar": False,
+            "user_provided": True,
+        },
     }
 
     response = client.post("/household-energy-profile/", json=profile_data)

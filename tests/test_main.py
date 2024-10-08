@@ -221,9 +221,16 @@ def test_invalid_cooktop_type():
     """
     Test that an invalid cooktop type raises a ValueError.
     """
-    your_home = YourHomeAnswers(people_in_house=3, postcode="1234")
+    your_home = YourHomeAnswers(
+        people_in_house=3,
+        postcode="1234",
+        disconnect_gas=True,
+        user_provided=True,
+    )
     cooktop_answers = CooktopAnswers(
-        cooktop="Piped gas", alternative_cooktop="Piped gas"
+        cooktop="Piped gas",
+        alternative_cooktop="Piped gas",
+        user_provided=False,
     )
     setattr(cooktop_answers, "cooktop", "Invalid type")
     setattr(cooktop_answers, "alternative_cooktop", "Invalid type")

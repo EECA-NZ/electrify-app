@@ -22,6 +22,8 @@ class YourHomeAnswers(BaseModel):
 
     people_in_house: conint(ge=1, le=6)
     postcode: constr(strip_whitespace=True, pattern=r"^\d{4}$")
+    disconnect_gas: bool
+    user_provided: bool
 
 
 class HeatingAnswers(BaseModel):
@@ -37,13 +39,15 @@ class HeatingAnswers(BaseModel):
         "Electric heater",
         "Wood burner",
     ]
-    alternative_main_heating_source: Literal[
-        "Piped gas heater",
-        "Bottled gas heater",
-        "Heat pump",
-        "Heat pump (ducted)",
-        "Electric heater",
-        "Wood burner",
+    alternative_main_heating_source: Optional[
+        Literal[
+            "Piped gas heater",
+            "Bottled gas heater",
+            "Heat pump",
+            "Heat pump (ducted)",
+            "Electric heater",
+            "Wood burner",
+        ]
     ]
     heating_during_day: Literal[
         "Never",
@@ -54,6 +58,7 @@ class HeatingAnswers(BaseModel):
     insulation_quality: Literal[
         "Not well insulated", "Moderately insulated", "Well insulated"
     ]
+    user_provided: bool
 
     def energy_usage_pattern(
         self, your_home, use_alternative: bool = False
@@ -108,13 +113,16 @@ class HotWaterAnswers(BaseModel):
         "Bottled gas instantaneous",
         "Hot water heat pump",
     ]
-    alternative_hot_water_heating_source: Literal[
-        "Electric hot water cylinder",
-        "Piped gas hot water cylinder",
-        "Piped gas instantaneous",
-        "Bottled gas instantaneous",
-        "Hot water heat pump",
+    alternative_hot_water_heating_source: Optional[
+        Literal[
+            "Electric hot water cylinder",
+            "Piped gas hot water cylinder",
+            "Piped gas instantaneous",
+            "Bottled gas instantaneous",
+            "Hot water heat pump",
+        ]
     ]
+    user_provided: bool
 
     def energy_usage_pattern(
         self, your_home, use_alternative: bool = True
@@ -167,9 +175,15 @@ class CooktopAnswers(BaseModel):
     cooktop: Literal[
         "Electric induction", "Piped gas", "Bottled gas", "Electric (coil or ceramic)"
     ]
-    alternative_cooktop: Literal[
-        "Electric induction", "Piped gas", "Bottled gas", "Electric (coil or ceramic)"
+    alternative_cooktop: Optional[
+        Literal[
+            "Electric induction",
+            "Piped gas",
+            "Bottled gas",
+            "Electric (coil or ceramic)",
+        ]
     ]
+    user_provided: bool
 
     def energy_usage_pattern(
         self, your_home, use_alternative: bool = False
@@ -236,11 +250,12 @@ class DrivingAnswers(BaseModel):
     """
 
     vehicle_type: Literal["Petrol", "Diesel", "Hybrid", "Plug-in hybrid", "Electric"]
-    alternative_vehicle_type: Literal[
-        "Petrol", "Diesel", "Hybrid", "Plug-in hybrid", "Electric"
+    alternative_vehicle_type: Optional[
+        Literal["Petrol", "Diesel", "Hybrid", "Plug-in hybrid", "Electric"]
     ]
     vehicle_size: Literal["Small", "Medium", "Large"]
     km_per_week: Literal["50 or less", "100", "200", "300", "400 or more"]
+    user_provided: bool
 
     def energy_usage_pattern(
         self, your_home, use_alternative: bool = False
@@ -284,6 +299,7 @@ class SolarAnswers(BaseModel):
     """
 
     hasSolar: bool
+    user_provided: bool
 
     def energy_generation(self, your_home) -> SolarYearlyFuelGenerationProfile:
         """

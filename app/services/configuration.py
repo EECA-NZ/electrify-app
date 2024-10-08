@@ -60,7 +60,9 @@ def get_default_your_home_answers():
     """
     Return a default 'your home' answers object.
     """
-    return YourHomeAnswers(people_in_house=4, postcode="0000")
+    return YourHomeAnswers(
+        people_in_house=4, postcode="0000", disconnect_gas=False, user_provided=False
+    )
 
 
 def get_default_heating_answers():
@@ -72,6 +74,7 @@ def get_default_heating_answers():
         alternative_main_heating_source="Heat pump",
         heating_during_day="5-7 days a week",
         insulation_quality="Moderately insulated",
+        user_provided=False,
     )
 
 
@@ -83,6 +86,7 @@ def get_default_hot_water_answers():
         hot_water_usage="Average",
         hot_water_heating_source="Electric hot water cylinder",
         alternative_hot_water_heating_source="Hot water heat pump",
+        user_provided=False,
     )
 
 
@@ -90,7 +94,11 @@ def get_default_cooktop_answers():
     """
     Return a default 'cooktop' answers object.
     """
-    return CooktopAnswers(cooktop="Piped gas", alternative_cooktop="Electric induction")
+    return CooktopAnswers(
+        cooktop="Piped gas",
+        alternative_cooktop="Electric induction",
+        user_provided=False,
+    )
 
 
 def get_default_driving_answers():
@@ -102,6 +110,7 @@ def get_default_driving_answers():
         alternative_vehicle_type="Electric",
         vehicle_size="Medium",
         km_per_week="200",
+        user_provided=False,
     )
 
 
@@ -109,7 +118,10 @@ def get_default_solar_answers():
     """
     Return a default 'solar' answers object.
     """
-    return SolarAnswers(hasSolar=False)
+    return SolarAnswers(
+        hasSolar=False,
+        user_provided=False,
+    )
 
 
 def get_default_household_energy_profile():
