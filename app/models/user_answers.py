@@ -48,7 +48,7 @@ class HeatingAnswers(BaseModel):
             "Electric heater",
             "Wood burner",
         ]
-    ]
+    ] = None
     heating_during_day: Literal[
         "Never",
         "1-2 days a week",
@@ -121,7 +121,7 @@ class HotWaterAnswers(BaseModel):
             "Bottled gas instantaneous",
             "Hot water heat pump",
         ]
-    ]
+    ] = None
     user_provided: bool
 
     def energy_usage_pattern(
@@ -182,7 +182,7 @@ class CooktopAnswers(BaseModel):
             "Bottled gas",
             "Electric (coil or ceramic)",
         ]
-    ]
+    ] = None
     user_provided: bool
 
     def energy_usage_pattern(
@@ -252,7 +252,7 @@ class DrivingAnswers(BaseModel):
     vehicle_type: Literal["Petrol", "Diesel", "Hybrid", "Plug-in hybrid", "Electric"]
     alternative_vehicle_type: Optional[
         Literal["Petrol", "Diesel", "Hybrid", "Plug-in hybrid", "Electric"]
-    ]
+    ] = None
     vehicle_size: Literal["Small", "Medium", "Large"]
     km_per_week: Literal["50 or less", "100", "200", "300", "400 or more"]
     user_provided: bool

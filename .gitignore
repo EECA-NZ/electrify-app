@@ -144,3 +144,6 @@ ENV/
 htmlcov/
 coverage.xml
 .coverage
+
+# Lookup tables
+lookup
