@@ -100,8 +100,8 @@ def generate_lookup_table_heating():
                 "main_heating_source",
                 "heating_during_day",
                 "insulation_quality",
-                "cost",
-                "emissions",
+                "annual_cost",
+                "annual_co2e",
             ]
         )
         for combination in combinations:
@@ -145,8 +145,8 @@ def generate_lookup_table_hot_water():
                 "disconnect_gas",
                 "hot_water_usage",
                 "hot_water_heating_source",
-                "cost",
-                "emissions",
+                "annual_cost",
+                "annual_co2e",
             ]
         )
         for combination in combinations:
@@ -182,8 +182,8 @@ def generate_lookup_table_cooktop():
                 "postcode",
                 "disconnect_gas",
                 "cooktop_type",
-                "cost",
-                "emissions"
+                "annual_cost",
+                "annual_co2e"
             ]
         )
         for combination in combinations:
@@ -222,8 +222,8 @@ def generate_lookup_table_vehicle():
                 "vehicle_type",
                 "vehicle_size",
                 "km_per_week",
-                "cost",
-                "emissions",
+                "annual_cost",
+                "annual_co2e",
             ]
         )
         for combination in combinations:
