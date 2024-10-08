@@ -9,6 +9,8 @@ This is a prototype for an approach to deploying our models that aims to make it
 
 In either case the same codebase is used, providing a single source of truth, and allowing EECA teams to manage the model in a single place.
 
+A unit test coverage report for the python codebase can be found at [https://eeca-nz.github.io/home-efficiency-calculator/htmlcov](https://eeca-nz.github.io/home-efficiency-calculator/htmlcov).
+
 ## Prerequisites
 Before running the application, ensure you have Python and Docker installed on your system. Python 3.12 or higher is recommended.
 
