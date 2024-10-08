@@ -89,7 +89,8 @@ def generate_lookup_table_heating():
         heating_during_day,
         insulation_quality,
     )
-    with open(os.path.join(LOOKUP_DIR, "heating_lookup_table.csv"), "w", newline="", encoding='UTF8') as file:
+    my_csv = os.path.join(LOOKUP_DIR, "heating_lookup_table.csv")
+    with open(my_csv, "w", newline="", encoding='UTF8') as file:
         writer = csv.writer(file)
         writer.writerow(
             [
@@ -134,7 +135,8 @@ def generate_lookup_table_hot_water():
         hot_water_usage,
         hot_water_heating_sources,
     )
-    with open(os.path.join(LOOKUP_DIR, "hot_water_lookup_table.csv"), "w", newline="", encoding='UTF8') as file:
+    my_csv = os.path.join(LOOKUP_DIR, "hot_water_lookup_table.csv")
+    with open(my_csv, "w", newline="", encoding='UTF8') as file:
         writer = csv.writer(file)
         writer.writerow(
             [
@@ -171,7 +173,8 @@ def generate_lookup_table_cooktop():
     Produce lookup table for cooktops.
     """
     combinations = itertools.product(people_in_house, postcodes, disconnect_gas, cooktop_types)
-    with open(os.path.join(LOOKUP_DIR, "cooktop_lookup_table.csv"), "w", newline="", encoding='UTF8') as file:
+    my_csv = os.path.join(LOOKUP_DIR, "cooktop_lookup_table.csv")
+    with open(my_csv, "w", newline="", encoding='UTF8') as file:
         writer = csv.writer(file)
         writer.writerow(
             [
@@ -208,7 +211,8 @@ def generate_lookup_table_vehicle():
     combinations = itertools.product(
         people_in_house, postcodes, disconnect_gas, vehicle_types, vehicle_sizes, km_per_week
     )
-    with open(os.path.join(LOOKUP_DIR, "vehicle_lookup_table.csv"), "w", newline="", encoding='UTF8') as file:
+    my_csv = os.path.join(LOOKUP_DIR, "vehicle_lookup_table.csv")
+    with open(my_csv, "w", newline="", encoding='UTF8') as file:
         writer = csv.writer(file)
         writer.writerow(
             [
