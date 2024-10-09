@@ -15,6 +15,9 @@ from app.services.configuration import (
     get_default_electricity_plan,
     get_default_natural_gas_plan,
     get_default_lpg_plan,
+    get_default_wood_price,
+    get_default_petrol_price,
+    get_default_diesel_price,
     get_default_usage_profile,
     get_default_your_home_answers,
     get_default_heating_answers,
@@ -55,10 +58,13 @@ def test_calculate_annual_costs():
         electricity_plan=get_default_electricity_plan(),
         natural_gas_plan=get_default_natural_gas_plan(),
         lpg_plan=get_default_lpg_plan(),
+        wood_price=get_default_wood_price(),
+        petrol_price=get_default_petrol_price(),
+        diesel_price=get_default_diesel_price(),
     )
     my_profile = get_default_usage_profile()
     my_cost = my_plan.calculate_cost(my_profile)
-    expected_cost = 1111.25
+    expected_cost = 2611.25
     assert my_cost == expected_cost
 
 
@@ -96,6 +102,9 @@ def test_create_household_energy_profile_to_cost():
         electricity_plan=get_default_electricity_plan(),
         natural_gas_plan=get_default_natural_gas_plan(),
         lpg_plan=get_default_lpg_plan(),
+        wood_price=get_default_wood_price(),
+        petrol_price=get_default_petrol_price(),
+        diesel_price=get_default_diesel_price(),
     )
     household_energy_use = estimate_usage_from_profile(household_profile)
     total_energy_costs = my_plan.calculate_cost(household_energy_use)
@@ -200,6 +209,9 @@ def test_create_options():
         electricity_plan=get_default_electricity_plan(),
         natural_gas_plan=get_default_natural_gas_plan(),
         lpg_plan=get_default_lpg_plan(),
+        wood_price=get_default_wood_price(),
+        petrol_price=get_default_petrol_price(),
+        diesel_price=get_default_diesel_price(),
     )
 
     household_energy_use = estimate_usage_from_profile(household_profile)

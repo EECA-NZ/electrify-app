@@ -30,7 +30,7 @@ def test_get_default_electricity_plan():
     Test the get_default_electricity_plan function.
     """
     electricity_plan = get_default_electricity_plan()
-    assert electricity_plan.name == "Basic Electricity Plan"
+    assert electricity_plan.name == "Default Electricity Plan"
 
 
 def test_get_default_natural_gas_plan():
@@ -38,7 +38,7 @@ def test_get_default_natural_gas_plan():
     Test the get_default_natural_gas_plan function.
     """
     natural_gas_plan = get_default_natural_gas_plan()
-    assert natural_gas_plan.name == "Basic Natural Gas Plan"
+    assert natural_gas_plan.name == "Default Natural Gas Plan"
 
 
 def test_get_default_lpg_plan():
@@ -46,7 +46,7 @@ def test_get_default_lpg_plan():
     Test the get_default_lpg_plan function.
     """
     lpg_plan = get_default_lpg_plan()
-    assert lpg_plan.name == "Basic LPG Plan"
+    assert lpg_plan.name == "Default LPG Plan"
 
 
 def test_get_default_usage_profile():

@@ -110,6 +110,8 @@ def estimate_usage_from_profile(
         heating_profile.lpg_kwh + hot_water_profile.lpg_kwh + cooktop_profile.lpg_kwh
     )
 
+    wood_kwh = heating_profile.wood_kwh
+
     return HouseholdYearlyFuelUsageProfile(
         elx_connection_days=elx_connection_days,
         day_kwh=day_kwh,
@@ -119,6 +121,7 @@ def estimate_usage_from_profile(
         natural_gas_kwh=natural_gas_kwh,
         lpg_tank_rental_days=lpg_tank_rental_days,
         lpg_kwh=lpg_kwh,
+        wood_kwh=wood_kwh,
         petrol_litres=driving_profile.petrol_litres,
         diesel_litres=driving_profile.diesel_litres,
     )

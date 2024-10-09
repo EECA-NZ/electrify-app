@@ -20,6 +20,7 @@ class YearlyFuelUsageProfile(BaseModel):
     natural_gas_kwh: float
     lpg_tank_rental_days: float
     lpg_kwh: float
+    wood_kwh: float
     petrol_litres: float
     diesel_litres: float
 

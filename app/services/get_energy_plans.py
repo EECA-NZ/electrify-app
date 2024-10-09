@@ -3,7 +3,13 @@ Functions relating to spatial data. Map postcodes to climate zones and EDB zones
 """
 
 from ..models.energy_plans import HouseholdEnergyPlan, ElectricityPlan
-from .configuration import get_default_natural_gas_plan, get_default_lpg_plan
+from .configuration import (
+    get_default_natural_gas_plan,
+    get_default_lpg_plan,
+    get_default_wood_price,
+    get_default_petrol_price,
+    get_default_diesel_price
+)
 
 
 def edb_zone(postcode: str) -> str:
@@ -55,4 +61,7 @@ def energy_plan(postcode: str) -> HouseholdEnergyPlan:
         electricity_plan=electricity_plan,
         natural_gas_plan=get_default_natural_gas_plan(),
         lpg_plan=get_default_lpg_plan(),
+        wood_price=get_default_wood_price(),
+        petrol_price=get_default_petrol_price(),
+        diesel_price=get_default_diesel_price(),
     )

@@ -95,6 +95,7 @@ class HeatingAnswers(BaseModel):
             natural_gas_kwh=0,
             lpg_tank_rental_days=0,
             lpg_kwh=0,
+            wood_kwh=0,
             petrol_litres=0,
             diesel_litres=0,
         )
@@ -162,6 +163,7 @@ class HotWaterAnswers(BaseModel):
             natural_gas_kwh=0,
             lpg_tank_rental_days=0,
             lpg_kwh=0,
+            wood_kwh=0,
             petrol_litres=0,
             diesel_litres=0,
         )
@@ -239,6 +241,7 @@ class CooktopAnswers(BaseModel):
             natural_gas_kwh=total_kwh if cooktop_type == "Piped gas" else 0,
             lpg_tank_rental_days=factor.get("lpg_tank_rental_days", 0),
             lpg_kwh=total_kwh if cooktop_type == "Bottled gas" else 0,
+            wood_kwh=0,
             petrol_litres=0,
             diesel_litres=0,
         )
@@ -288,6 +291,7 @@ class DrivingAnswers(BaseModel):
             natural_gas_kwh=0,
             lpg_tank_rental_days=0,
             lpg_kwh=0,
+            wood_kwh=0,
             petrol_litres=petrol_usage,
             diesel_litres=0,
         )
@@ -333,6 +337,7 @@ class SolarAnswers(BaseModel):
             natural_gas_kwh=0,
             lpg_tank_rental_days=0,
             lpg_kwh=0,
+            wood_kwh=0,
             petrol_litres=0,
             diesel_litres=0,
         )

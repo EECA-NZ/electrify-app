@@ -84,6 +84,69 @@ class LPGPlan(BaseModel):
         )
 
 
+class WoodPrice(BaseModel):
+    """
+    Wood plan for a household.
+    """
+
+    name: str
+    per_wood_kwh: float
+
+    def calculate_cost(self, profile):
+        """
+        Calculate the cost of wood for a household.
+
+        Args:
+        profile: HouseholdYearlyFuelUsageProfile object
+
+        Returns:
+        cost: float, the total cost of wood for the household
+        """
+        return profile.wood_kwh * self.per_wood_kwh
+
+
+class PetrolPrice(BaseModel):
+    """
+    Petrol plan for a household.
+    """
+
+    name: str
+    per_petrol_litre: float
+
+    def calculate_cost(self, profile):
+        """
+        Calculate the cost of petrol for a household.
+
+        Args:
+        profile: HouseholdYearlyFuelUsageProfile object
+
+        Returns:
+        cost: float, the total cost of petrol for the household
+        """
+        return profile.petrol_litres * self.per_petrol_litre
+
+
+class DieselPrice(BaseModel):
+    """
+    Diesel plan for a household.
+    """
+
+    name: str
+    per_diesel_litre: float
+
+    def calculate_cost(self, profile):
+        """
+        Calculate the cost of diesel for a household.
+
+        Args:
+        profile: HouseholdYearlyFuelUsageProfile object
+
+        Returns:
+        cost: float, the total cost of diesel for the household
+        """
+        return profile.diesel_litres * self.per_diesel_litre
+
+
 class HouseholdEnergyPlan(BaseModel):
     """
     Overall household energy plan.
@@ -93,6 +156,9 @@ class HouseholdEnergyPlan(BaseModel):
     electricity_plan: ElectricityPlan
     natural_gas_plan: NaturalGasPlan
     lpg_plan: LPGPlan
+    wood_price: WoodPrice
+    petrol_price: PetrolPrice
+    diesel_price: DieselPrice
 
     def calculate_cost(self, profile):
         """
@@ -108,4 +174,7 @@ class HouseholdEnergyPlan(BaseModel):
             self.electricity_plan.calculate_cost(profile)
             + self.natural_gas_plan.calculate_cost(profile)
             + self.lpg_plan.calculate_cost(profile)
+            + self.wood_price.calculate_cost(profile)
+            + self.petrol_price.calculate_cost(profile)
+            + self.diesel_price.calculate_cost(profile)
         )

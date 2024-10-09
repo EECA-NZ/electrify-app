@@ -2,7 +2,14 @@
 Configuration functions including default values for energy plans, usage profiles, and answers.
 """
 
-from ..models.energy_plans import ElectricityPlan, NaturalGasPlan, LPGPlan
+from ..models.energy_plans import (
+    ElectricityPlan,
+    NaturalGasPlan,
+    LPGPlan,
+    WoodPrice,
+    PetrolPrice,
+    DieselPrice,
+)
 from ..models.usage_profiles import HouseholdYearlyFuelUsageProfile
 from ..models.user_answers import YourHomeAnswers, HeatingAnswers
 from ..models.user_answers import HotWaterAnswers, CooktopAnswers
@@ -14,7 +21,7 @@ def get_default_electricity_plan():
     Return a default electricity plan.
     """
     return ElectricityPlan(
-        name="Basic Electricity Plan",
+        name="Default Electricity Plan",
         nzd_per_day_kwh=0.20,
         nzd_per_night_kwh=0.18,
         nzd_per_controlled_kwh=0.15,
@@ -27,7 +34,7 @@ def get_default_natural_gas_plan():
     Return a default natural gas plan.
     """
     return NaturalGasPlan(
-        name="Basic Natural Gas Plan", per_natural_gas_kwh=0.10, daily_charge=1.5
+        name="Default Natural Gas Plan", per_natural_gas_kwh=0.10, daily_charge=1.5
     )
 
 
@@ -35,7 +42,36 @@ def get_default_lpg_plan():
     """
     Return a default LPG plan.
     """
-    return LPGPlan(name="Basic LPG Plan", per_lpg_kwh=0.25, daily_charge=80 / 365.25)
+    return LPGPlan(name="Default LPG Plan", per_lpg_kwh=0.25, daily_charge=80 / 365.25)
+
+
+def get_default_wood_price():
+    """
+    Return a default wood plan.
+    """
+    return WoodPrice(
+        name="Default Wood Price",
+        per_wood_kwh=0.05,
+    )
+
+def get_default_petrol_price():
+    """
+    Return a default petrol plan.
+    """
+    return PetrolPrice(
+        name="Default Petrol Price",
+        per_petrol_litre=1.50,
+    )
+
+
+def get_default_diesel_price():
+    """
+    Return a default diesel plan.
+    """
+    return DieselPrice(
+        name="Default Diesel Price",
+        per_diesel_litre=1.25,
+    )
 
 
 def get_default_usage_profile():
@@ -51,6 +87,7 @@ def get_default_usage_profile():
         natural_gas_kwh=0,
         lpg_tank_rental_days=0,
         lpg_kwh=0,
+        wood_kwh=0,
         petrol_litres=1000,
         diesel_litres=0,
     )
