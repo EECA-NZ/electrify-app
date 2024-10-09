@@ -7,7 +7,7 @@ import logging
 import itertools
 import os
 
-from app.models.energy_plans import HouseholdEnergyPlan
+from app.services.get_energy_plans import energy_plan
 import app.services.configuration as cfg
 from app.services.energy_calculator import emissions
 from app.models.user_answers import (
@@ -25,13 +25,6 @@ LOOKUP_DIR = "../lookup/"
 
 # Ensure the directory exists
 os.makedirs(LOOKUP_DIR, exist_ok=True)
-
-my_plan = HouseholdEnergyPlan(
-    name="Basic Household Energy Plan",
-    electricity_plan=cfg.get_default_electricity_plan(),
-    natural_gas_plan=cfg.get_default_natural_gas_plan(),
-    lpg_plan=cfg.get_default_lpg_plan(),
-)
 
 USER_PROVIDED = False
 people_in_house = [1, 2, 3, 4, 5, 6]
@@ -72,6 +65,7 @@ def calculate_cost_and_emissions(your_home, answers):
     Use the answers and postcode to calculate cost and emissions.
     """
     energy_usage_profile = answers.energy_usage_pattern(your_home)
+    my_plan = energy_plan(your_home.postcode)
     cost = my_plan.calculate_cost(energy_usage_profile)
     my_emissions = emissions(energy_usage_profile)
     return {"cost": cost, "emissions": my_emissions}
