@@ -81,8 +81,7 @@ def get_default_usage_profile():
     return HouseholdYearlyFuelUsageProfile(
         elx_connection_days=365,
         day_kwh=2000,
-        night_kwh=1000,
-        controlled_kwh=500,
+        flexible_kwh=1000,
         natural_gas_connection_days=0,
         natural_gas_kwh=0,
         lpg_tank_rental_days=0,

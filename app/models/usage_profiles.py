@@ -10,12 +10,26 @@ from pydantic import BaseModel
 class YearlyFuelUsageProfile(BaseModel):
     """
     Base class for yearly fuel usage profiles for different household areas.
+
+    Attributes:
+    elx_connection_days: float, number of days with electricity connection
+    day_kwh: float, electricity usage during the day
+    flexible_kwh: float, electricity usage that can happen at night or on
+        controlled rates (whichever is cheaper)
+    natural_gas_connection_days: float, number of days with natural gas
+        connection
+    natural_gas_kwh: float, natural gas usage
+    lpg_tank_rental_days: float, number of days with LPG tank rental
+        (typically 1 year times two bottles if using bottled gas)
+    lpg_kwh: float, LPG usage
+    wood_kwh: float, wood usage
+    petrol_litres: float, petrol usage
+    diesel_litres: float, diesel usage
     """
 
     elx_connection_days: float
     day_kwh: float
-    night_kwh: float
-    controlled_kwh: float
+    flexible_kwh: float
     natural_gas_connection_days: float
     natural_gas_kwh: float
     lpg_tank_rental_days: float

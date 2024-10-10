@@ -87,17 +87,11 @@ def estimate_usage_from_profile(
         + cooktop_profile.day_kwh
         + driving_profile.day_kwh
     )
-    night_kwh = (
-        heating_profile.night_kwh
-        + hot_water_profile.night_kwh
-        + cooktop_profile.night_kwh
-        + driving_profile.night_kwh
-    )
-    controlled_kwh = (
-        heating_profile.controlled_kwh
-        + hot_water_profile.controlled_kwh
-        + cooktop_profile.controlled_kwh
-        + driving_profile.controlled_kwh
+    flexible_kwh = (
+        heating_profile.flexible_kwh
+        + hot_water_profile.flexible_kwh
+        + cooktop_profile.flexible_kwh
+        + driving_profile.flexible_kwh
     )
 
     # Natural gas and LPG
@@ -115,8 +109,7 @@ def estimate_usage_from_profile(
     return HouseholdYearlyFuelUsageProfile(
         elx_connection_days=elx_connection_days,
         day_kwh=day_kwh,
-        night_kwh=night_kwh,
-        controlled_kwh=controlled_kwh,
+        flexible_kwh=flexible_kwh,
         natural_gas_connection_days=natural_gas_connection_days,
         natural_gas_kwh=natural_gas_kwh,
         lpg_tank_rental_days=lpg_tank_rental_days,
@@ -134,8 +127,7 @@ def emissions(usage_profile: YearlyFuelUsageProfile) -> float:
     # List of emissions components
     components = [
         (usage_profile.day_kwh, "electricity"),
-        (usage_profile.night_kwh, "electricity"),
-        (usage_profile.controlled_kwh, "electricity"),
+        (usage_profile.flexible_kwh, "electricity"),
         (usage_profile.natural_gas_kwh, "natural_gas"),
         (usage_profile.lpg_kwh, "lpg"),
         (usage_profile.petrol_litres, "petrol"),

@@ -64,7 +64,7 @@ def test_calculate_annual_costs():
     )
     my_profile = get_default_usage_profile()
     my_cost = my_plan.calculate_cost(my_profile)
-    expected_cost = 2611.25
+    expected_cost = 2506.25
     assert my_cost == expected_cost
 
 
@@ -133,8 +133,7 @@ def test_cooking_energy_usage():
     expected_values = {
         "Electric induction": {
             "elx_connection_days": DAYS_IN_YEAR,
-            "night_kwh": 0,
-            "controlled_kwh": 0,
+            "flexible_kwh": 0,
             "natural_gas_kwh": 0,
             "lpg_kwh": 0,
             "natural_gas_connection_days": 0,
@@ -143,8 +142,7 @@ def test_cooking_energy_usage():
         "Piped gas": {
             "elx_connection_days": 0,
             "day_kwh": 0,
-            "night_kwh": 0,
-            "controlled_kwh": 0,
+            "flexible_kwh": 0,
             "lpg_kwh": 0,
             "natural_gas_connection_days": DAYS_IN_YEAR,
             "lpg_tank_rental_days": 0,
@@ -152,15 +150,13 @@ def test_cooking_energy_usage():
         "Bottled gas": {
             "elx_connection_days": 0,
             "day_kwh": 0,
-            "night_kwh": 0,
-            "controlled_kwh": 0,
+            "flexible_kwh": 0,
             "natural_gas_connection_days": 0,
             "lpg_tank_rental_days": 2 * DAYS_IN_YEAR,
         },
         "Electric (coil or ceramic)": {
             "elx_connection_days": DAYS_IN_YEAR,
-            "night_kwh": 0,
-            "controlled_kwh": 0,
+            "flexible_kwh": 0,
             "natural_gas_kwh": 0,
             "lpg_kwh": 0,
             "natural_gas_connection_days": 0,

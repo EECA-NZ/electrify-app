@@ -89,8 +89,7 @@ class HeatingAnswers(BaseModel):
         return HeatingYearlyFuelUsageProfile(
             elx_connection_days=365,
             day_kwh=total_kwh,
-            night_kwh=300,
-            controlled_kwh=200,
+            flexible_kwh=300,
             natural_gas_connection_days=0,
             natural_gas_kwh=0,
             lpg_tank_rental_days=0,
@@ -153,12 +152,11 @@ class HotWaterAnswers(BaseModel):
         ) * your_home.people_in_house
         day_night = {"Low": (0.6, 0.4), "Average": (0.7, 0.3), "High": (0.8, 0.2)}
         day_kwh = total_kwh * day_night[self.hot_water_usage][0]
-        night_kwh = total_kwh * day_night[self.hot_water_usage][1]
+        flexible_kwh = total_kwh * day_night[self.hot_water_usage][1]
         return HotWaterYearlyFuelUsageProfile(
             elx_connection_days=365,
             day_kwh=day_kwh,
-            night_kwh=night_kwh,
-            controlled_kwh=200,
+            flexible_kwh=flexible_kwh,
             natural_gas_connection_days=0,
             natural_gas_kwh=0,
             lpg_tank_rental_days=0,
@@ -235,8 +233,7 @@ class CooktopAnswers(BaseModel):
         return CooktopYearlyFuelUsageProfile(
             elx_connection_days=factor.get("elx_connection_days", 0),
             day_kwh=total_kwh if "Electric" in cooktop_type else 0,
-            night_kwh=0,
-            controlled_kwh=0,
+            flexible_kwh=0,
             natural_gas_connection_days=factor.get("natural_gas_connection_days", 0),
             natural_gas_kwh=total_kwh if cooktop_type == "Piped gas" else 0,
             lpg_tank_rental_days=factor.get("lpg_tank_rental_days", 0),
@@ -285,8 +282,7 @@ class DrivingAnswers(BaseModel):
         return DrivingYearlyFuelUsageProfile(
             elx_connection_days=0,
             day_kwh=0,
-            night_kwh=0,
-            controlled_kwh=0,
+            flexible_kwh=0,
             natural_gas_connection_days=0,
             natural_gas_kwh=0,
             lpg_tank_rental_days=0,
@@ -331,8 +327,7 @@ class SolarAnswers(BaseModel):
         return SolarYearlyFuelGenerationProfile(
             elx_connection_days=0,
             day_kwh=-annual_generation_kwh,
-            night_kwh=0,
-            controlled_kwh=0,
+            flexible_kwh=0,
             natural_gas_connection_days=0,
             natural_gas_kwh=0,
             lpg_tank_rental_days=0,
